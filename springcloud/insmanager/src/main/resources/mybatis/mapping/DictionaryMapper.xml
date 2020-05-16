@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.DictionaryMapper">
+
+    <resultMap type="com.hl.insmanager.module.Dictionary" id="dictionaryResult">
+        <result column="dic_id" property="dic_id"/>
+        <result column="dic_name" property="dic_name"/>
+        <result column="dic_type" property="dic_type"/>
+        <result column="dic_key" property="dic_key"/>
+        <result column="dic_value" property="dic_value"/>
+        <result column="dic_desc" property="dic_desc"/>
+        <result column="dic_seq" property="dic_seq"/>
+        <result column="isvalid" property="isvalid"/>
+        <result column="createuser" property="createuser"/>
+        <result column="createtime" property="createtime"/>
+        <result column="updateuser" property="updateuser"/>
+        <result column="updatetime" property="updatetime"/>
+    </resultMap>
+
+    <sql id="table">
+        t_dictionary
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            dic_id,
+            dic_name,
+            dic_type,
+            dic_key,
+            dic_value,
+            dic_desc,
+            dic_seq,
+            isvalid,
+            createuser,
+            createtime,
+            updateuser,
+            updatetime
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="dic_id != null and dic_id != ''">dic_id,</if>
+            <if test="dic_name != null and dic_name != ''">dic_name,</if>
+            <if test="dic_type != null and dic_type != ''">dic_type,</if>
+            <if test="dic_key != null and dic_key != ''">dic_key,</if>
+            <if test="dic_value != null and dic_value != ''">dic_value,</if>
+            <if test="dic_desc != null and dic_desc != ''">dic_desc,</if>
+            <if test="dic_seq != null">dic_seq,</if>
+            isvalid,
+            <if test="createuser != null">createuser,</if>
+            createtime,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="dic_id != null and dic_id != ''">#{dic_id,jdbcType=VARCHAR},</if>
+            <if test="dic_name != null and dic_name != ''">#{dic_name,jdbcType=VARCHAR},</if>
+            <if test="dic_type != null and dic_type != ''">#{dic_type,jdbcType=VARCHAR},</if>
+            <if test="dic_key != null and dic_key != ''">#{dic_key,jdbcType=VARCHAR},</if>
+            <if test="dic_value != null and dic_value != ''">#{dic_value,jdbcType=VARCHAR},</if>
+            <if test="dic_desc != null and dic_desc != ''">#{dic_desc,jdbcType=VARCHAR},</if>
+            <if test="dic_seq != null">#{dic_seq},</if>
+            1,
+            <if test="createuser != null">#{createuser},</if>
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="dic_name != null">
+                dic_name=#{dic_name,jdbcType=VARCHAR},
+            </if>
+            <if test="dic_type != null and dic_type != ''">
+                dic_type=#{dic_type,jdbcType=VARCHAR},
+            </if>
+            <if test="dic_key != null and dic_key != ''">
+                dic_key=#{dic_key,jdbcType=VARCHAR},
+            </if>
+            <if test="dic_value != null and dic_value != ''">
+                dic_value=#{dic_value,jdbcType=VARCHAR},
+            </if>
+            <if test="dic_desc != null and dic_desc != ''">
+                dic_desc=#{dic_desc,jdbcType=VARCHAR},
+            </if>
+            <if test="dic_seq != null">
+                dic_seq=#{dic_seq},
+            </if>
+            <if test="isvalid != null">
+                isvalid=#{isvalid},
+            </if>
+            <if test="updateuser != null">
+                updateuser=#{updateuser},
+            </if>
+            updatetime=now(),
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.dic_name != null and t.dic_name != '' ">and dic_name like
+                    concat('%',#{t.dic_name},'%')
+                </if>
+                <if test="t.dic_type != null   and t.dic_type != '' ">and dic_type like
+                    concat('%',#{t.dic_type},'%')
+                </if>
+                <if test="t.dic_key != null and t.dic_key != '' ">and dic_key like
+                    concat('%',#{t.dic_key},'%')
+                </if>
+                <if test="t.dic_value != null   and t.dic_value != '' ">and dic_value like
+                    concat('%',#{t.dic_value},'%')
+                </if>
+                <if test="t.dic_desc != null   and t.dic_desc != ''    ">and dic_desc like
+                    concat('%',#{t.dic_desc},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.dic_id != null  and t.dic_id != '' ">and dic_id =
+                    #{t.dic_id}
+                </if>
+                <if test="t.dic_name != null  and t.dic_name != '' ">and dic_name =
+                    #{t.dic_name}
+                </if>
+                <if test="t.dic_type != null  and t.dic_type != '' ">and dic_type =
+                    #{t.dic_type}
+                </if>
+                <if test="t.dic_key != null  and t.dic_key != ''  ">and dic_key =
+                    #{t.dic_key}
+                </if>
+                <if test="t.dic_value != null  and t.dic_value != ''  ">and dic_value =
+                    #{t.dic_value}
+                </if>
+                <if test="t.dic_desc != null  and t.dic_desc != ''  ">and dic_desc =
+                    #{t.dic_desc}
+                </if>
+                <if test="t.dic_seq != null ">and dic_seq = #{t.dic_seq}</if>
+                <if test="t.isvalid != null ">and isvalid = #{t.isvalid}</if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        dic_id = #{dic_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by dic_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="dictionaryResult">
+        select
+        <include refid="tableColumns"/>
+        from t_dictionary
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="dictionaryResult">
+        select
+        <include refid="tableColumns"/>
+        from t_dictionary
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_dictionary (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_dictionary
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="dictionaryResult">
+        select
+        <include refid="tableColumns"/>
+        from t_dictionary
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY dic_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_dictionary
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_dictionary
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="dictionaryResult">
+        delete from t_dictionary
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="dictionaryResult">
+        delete from t_dictionary
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="dictionaryResult">
+        select
+        <include refid="tableColumns"/>
+        from t_dictionary
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="dicVO" type="com.hl.insmanager.vo.dic.DicVO">
+        <result column="dic_id" property="dic_id"/>
+        <result column="dic_value" property="dic_value"/>
+    </resultMap>
+
+    <select id="queryByName" resultMap="dicVO">
+        SELECT td.dic_id, td.dic_value FROM t_dictionary td WHERE td.dic_name = #{dic_name}
+        ORDER BY td.dic_seq
+    </select>
+
+    <select id="queryUserLabels" resultMap="dicVO">
+        SELECT td.dic_id, td.dic_value FROM t_user_label tul
+        INNER JOIN t_dictionary td
+        ON (tul.dic_id = td.dic_id AND tul.user_id = #{user_id} )
+        ORDER BY td.dic_seq
+    </select>
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.UserFocusMapper">
+
+    <resultMap type="com.hl.insmanager.module.UserFocus" id="userFocusResult">
+        <result column="focus_id" property="focus_id"/>
+        <result column="focus_from" property="focus_from"/>
+        <result column="focus_to" property="focus_to"/>
+        <result column="focus_time" property="focus_time"/>
+        <result column="read_time" property="read_time"/>
+        <result column="is_read" property="is_read"/>
+    </resultMap>
+
+    <sql id="table">
+        t_user_focus
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            focus_id,
+            focus_from,
+            focus_to,
+            focus_time,
+            read_time,
+            is_read
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="focus_id != null and focus_id != ''">focus_id,</if>
+            <if test="focus_from != null and focus_from != ''">focus_from,</if>
+            <if test="focus_to != null and focus_to != ''">focus_to,</if>
+            focus_time,
+            read_time,
+            <if test="is_read != null ">is_read,</if>
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="focus_id != null and focus_id != ''">#{focus_id,jdbcType=VARCHAR},</if>
+            <if test="focus_from != null and focus_from != ''">#{focus_from,jdbcType=VARCHAR},</if>
+            <if test="focus_to != null and focus_to != ''">#{focus_to,jdbcType=VARCHAR},</if>
+            now(),
+            now(),
+            <if test="is_read != null ">#{is_read},</if>
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="focus_from != null">
+                focus_from=#{focus_from,jdbcType=VARCHAR},
+            </if>
+            <if test="focus_to != null and focus_to != ''">
+                focus_to=#{focus_to,jdbcType=VARCHAR},
+            </if>
+            <if test="is_read != null ">
+                is_read=#{is_read},
+            </if>
+            read_time=now(),
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.focus_from != null and t.focus_from != '' ">and focus_from like
+                    concat('%',#{t.focus_from},'%')
+                </if>
+                <if test="t.focus_to != null   and t.focus_to != '' ">and focus_to like
+                    concat('%',#{t.focus_to},'%')
+                </if>
+                <if test="t.is_read != null ">and is_read like
+                    concat('%',#{t.is_read},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.focus_id != null  and t.focus_id != '' ">and focus_id =
+                    #{t.focus_id}
+                </if>
+                <if test="t.focus_from != null  and t.focus_from != '' ">and focus_from =
+                    #{t.focus_from}
+                </if>
+                <if test="t.focus_to != null  and t.focus_to != '' ">and focus_to =
+                    #{t.focus_to}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        focus_id = #{focus_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by focus_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="userFocusResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_focus
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="userFocusResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_focus
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_user_focus (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_user_focus
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="userFocusResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_focus
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY focus_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_user_focus
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_user_focus
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="userFocusResult">
+        delete from t_user_focus
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="userFocusResult">
+        delete from t_user_focus
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="userFocusResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_focus
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+
+    <resultMap id="userFocusTosVO" type="com.hl.insmanager.vo.userfocus.UserFocusTosVO">
+        <result column="focus_id" property="focus_id"/>
+        <result column="focus_to" property="focus_to"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+    </resultMap>
+
+    <select id="focusTos" resultMap="userFocusTosVO">
+        SELECT tuf.focus_id, tuf.focus_to, tu.user_name, tu.user_icon
+        FROM t_user_focus tuf
+        INNER JOIN t_user tu
+        ON (tuf.focus_from = #{focus_from}
+        AND tuf.focus_to = tu.user_id AND tu.user_black = 0 )
+        ORDER BY tuf.focus_time DESC
+    </select>
+
+    <update id="read">
+        UPDATE t_user_focus SET is_read = 1 WHERE focus_from = #{user_id} AND focus_to = #{loginerId}
+    </update>
+
+    <update id="topicRead">
+        UPDATE t_user_focus SET read_time = now() WHERE focus_from = #{loginerId} AND focus_to = #{user_id}
+    </update>
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

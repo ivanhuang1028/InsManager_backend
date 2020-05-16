@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.TopicImagesMapper">
+
+    <resultMap type="com.hl.insmanager.module.TopicImages" id="topicImagesResult">
+        <result column="ti_id" property="ti_id"/>
+        <result column="topic_id" property="topic_id"/>
+        <result column="image_id" property="image_id"/>
+        <result column="image_seq" property="image_seq"/>
+    </resultMap>
+
+    <sql id="table">
+        t_topic_images
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            ti_id,
+            topic_id,
+            image_id,
+            image_seq
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="ti_id != null and ti_id != ''">ti_id,</if>
+            <if test="topic_id != null and topic_id != ''">topic_id,</if>
+            <if test="image_id != null and image_id != ''">image_id,</if>
+            <if test="image_seq != null ">image_seq,</if>
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="ti_id != null and ti_id != ''">#{ti_id,jdbcType=VARCHAR},</if>
+            <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
+            <if test="image_id != null and image_id != ''">#{image_id,jdbcType=VARCHAR},</if>
+            <if test="image_seq != null ">#{image_seq},</if>
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="image_id != null">
+                image_id=#{image_id,jdbcType=VARCHAR},
+            </if>
+            <if test="topic_id != null and topic_id != ''">
+                topic_id=#{topic_id,jdbcType=VARCHAR},
+            </if>
+            <if test="image_seq != null ">
+                image_seq=#{image_seq},
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.image_id != null and t.image_id != '' ">and image_id like
+                    concat('%',#{t.image_id},'%')
+                </if>
+                <if test="t.topic_id != null   and t.topic_id != '' ">and topic_id like
+                    concat('%',#{t.topic_id},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.topic_id != null  and t.topic_id != '' ">and topic_id =
+                    #{t.topic_id}
+                </if>
+                <if test="t.image_id != null  and t.image_id != '' ">and image_id =
+                    #{t.image_id}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        ti_id = #{ti_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by topic_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="topicImagesResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_images
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="topicImagesResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_images
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_topic_images (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_topic_images
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="topicImagesResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_images
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY topic_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_topic_images
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_topic_images
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="topicImagesResult">
+        delete from t_topic_images
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="topicImagesResult">
+        delete from t_topic_images
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="topicImagesResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_images
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.ImageMapper">
+
+    <resultMap type="com.hl.insmanager.module.Image" id="imageResult">
+        <result column="image_id" property="image_id"/>
+        <result column="image_name" property="image_name"/>
+        <result column="image_type" property="image_type"/>
+        <result column="image_remote_path" property="image_remote_path"/>
+        <result column="image_remote_link" property="image_remote_link"/>
+        <result column="image_user" property="image_user"/>
+        <result column="image_uploadtime" property="image_uploadtime"/>
+    </resultMap>
+
+    <sql id="table">
+        t_image
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            image_id,
+            image_name,
+            image_type,
+            image_remote_path,
+            image_remote_link,
+            image_user,
+            image_uploadtime
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="image_id != null and image_id != ''">image_id,</if>
+            <if test="image_name != null and image_name != ''">image_name,</if>
+            <if test="image_type != null and image_type != ''">image_type,</if>
+            <if test="image_remote_path != null and image_remote_path != ''">image_remote_path,</if>
+            <if test="image_remote_link != null and image_remote_link != ''">image_remote_link,</if>
+            <if test="image_user != null and image_user != ''">image_user,</if>
+            image_uploadtime,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="image_id != null and image_id != ''">#{image_id,jdbcType=VARCHAR},</if>
+            <if test="image_name != null and image_name != ''">#{image_name,jdbcType=VARCHAR},</if>
+            <if test="image_type != null and image_type != ''">#{image_type,jdbcType=VARCHAR},</if>
+            <if test="image_remote_path != null and image_remote_path != ''">#{image_remote_path,jdbcType=VARCHAR},</if>
+            <if test="image_remote_link != null and image_remote_link != ''">#{image_remote_link,jdbcType=VARCHAR},</if>
+            <if test="image_user != null and image_user != ''">#{image_user,jdbcType=VARCHAR},</if>
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="image_name != null">
+                image_name=#{image_name,jdbcType=VARCHAR},
+            </if>
+            <if test="image_type != null and image_type != ''">
+                image_type=#{image_type,jdbcType=VARCHAR},
+            </if>
+            <if test="image_remote_path != null and image_remote_path != ''">
+                image_remote_path=#{image_remote_path,jdbcType=VARCHAR},
+            </if>
+            <if test="image_remote_link != null and image_remote_link != ''">
+                image_remote_link=#{image_remote_link,jdbcType=VARCHAR},
+            </if>
+            <if test="image_user != null and image_user != ''">
+                image_user=#{image_user,jdbcType=VARCHAR},
+            </if>
+            image_uploadtime=now(),
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.image_name != null and t.image_name != '' ">and image_name like
+                    concat('%',#{t.image_name},'%')
+                </if>
+                <if test="t.image_type != null   and t.image_type != '' ">and image_type like
+                    concat('%',#{t.image_type},'%')
+                </if>
+                <if test="t.image_remote_path != null and t.image_remote_path != '' ">and image_remote_path like
+                    concat('%',#{t.image_remote_path},'%')
+                </if>
+                <if test="t.image_remote_link != null   and t.image_remote_link != '' ">and image_remote_link like
+                    concat('%',#{t.image_remote_link},'%')
+                </if>
+                <if test="t.image_user != null   and t.image_user != ''    ">and image_user like
+                    concat('%',#{t.image_user},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.image_id != null  and t.image_id != '' ">and image_id =
+                    #{t.image_id}
+                </if>
+                <if test="t.image_name != null  and t.image_name != '' ">and image_name =
+                    #{t.image_name}
+                </if>
+                <if test="t.image_type != null  and t.image_type != '' ">and image_type =
+                    #{t.image_type}
+                </if>
+                <if test="t.image_remote_path != null  and t.image_remote_path != ''  ">and image_remote_path =
+                    #{t.image_remote_path}
+                </if>
+                <if test="t.image_remote_link != null  and t.image_remote_link != ''  ">and image_remote_link =
+                    #{t.image_remote_link}
+                </if>
+                <if test="t.image_user != null  and t.image_user != ''  ">and image_user =
+                    #{t.image_user}
+                </if>
+                <if test="t.image_uploadtime != null ">and image_uploadtime = #{t.image_uploadtime}</if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        image_id = #{image_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by image_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="imageResult">
+        select
+        <include refid="tableColumns"/>
+        from t_image
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="imageResult">
+        select
+        <include refid="tableColumns"/>
+        from t_image
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_image (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_image
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="imageResult">
+        select
+        <include refid="tableColumns"/>
+        from t_image
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY image_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_image
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_image
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="imageResult">
+        delete from t_image
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="imageResult">
+        delete from t_image
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="imageResult">
+        select
+        <include refid="tableColumns"/>
+        from t_image
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

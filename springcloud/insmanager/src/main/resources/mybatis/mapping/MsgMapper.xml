@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.MsgMapper">
+
+    <resultMap type="com.hl.insmanager.module.Msg" id="msgResult">
+        <result column="msg_id" property="msg_id"/>
+        <result column="user_from" property="user_from"/>
+        <result column="user_to" property="user_to"/>
+        <result column="msg_type" property="msg_type"/>
+        <result column="msg_content" property="msg_content"/>
+        <result column="face_content" property="face_content"/>
+        <result column="topic_id" property="topic_id"/>
+        <result column="image_id" property="image_id"/>
+        <result column="is_read" property="is_read"/>
+        <result column="msg_time" property="msg_time"/>
+    </resultMap>
+
+    <sql id="table">
+        t_msg
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            msg_id,
+            user_from,
+            user_to,
+            msg_type,
+            msg_content,
+            face_content,
+            topic_id,
+            image_id,
+            is_read,
+            msg_time
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="msg_id != null and msg_id != ''">msg_id,</if>
+            <if test="user_from != null and user_from != ''">user_from,</if>
+            <if test="user_to != null and user_to != ''">user_to,</if>
+            <if test="msg_type != null ">msg_type,</if>
+            <if test="msg_content != null and msg_content != ''">msg_content,</if>
+            <if test="face_content != null and face_content != ''">face_content,</if>
+            <if test="topic_id != null and topic_id != ''">topic_id,</if>
+            <if test="image_id != null and image_id != ''">image_id,</if>
+            is_read,
+            msg_time,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="msg_id != null and msg_id != ''">#{msg_id,jdbcType=VARCHAR},</if>
+            <if test="user_from != null and user_from != ''">#{user_from,jdbcType=VARCHAR},</if>
+            <if test="user_to != null and user_to != ''">#{user_to,jdbcType=VARCHAR},</if>
+            <if test="msg_type != null ">#{msg_type},</if>
+            <if test="msg_content != null and msg_content != ''">#{msg_content,jdbcType=VARCHAR},</if>
+            <if test="face_content != null and face_content != ''">#{face_content,jdbcType=VARCHAR},</if>
+            <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
+            <if test="image_id != null and image_id != ''">#{image_id,jdbcType=VARCHAR},</if>
+            0,
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="user_from != null">
+                user_from=#{user_from,jdbcType=VARCHAR},
+            </if>
+            <if test="user_to != null and user_to != ''">
+                user_to=#{user_to,jdbcType=VARCHAR},
+            </if>
+            <if test="msg_type != null ">
+                msg_type=#{msg_type},
+            </if>
+            <if test="msg_content != null and msg_content != ''">
+                msg_content=#{msg_content,jdbcType=VARCHAR},
+            </if>
+            <if test="face_content != null and face_content != ''">
+                face_content=#{face_content,jdbcType=VARCHAR},
+            </if>
+            <if test="topic_id != null and topic_id != ''">
+                topic_id=#{topic_id,jdbcType=VARCHAR},
+            </if>
+            <if test="image_id != null and image_id != ''">
+                image_id=#{image_id,jdbcType=VARCHAR},
+            </if>
+            <if test="is_read != null and is_read != ''">
+                is_read=#{is_read,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.user_from != null and t.user_from != '' ">and user_from like
+                    concat('%',#{t.user_from},'%')
+                </if>
+                <if test="t.user_to != null   and t.user_to != '' ">and user_to like
+                    concat('%',#{t.user_to},'%')
+                </if>
+                <if test="t.msg_type != null and t.msg_type != '' ">and msg_type like
+                    concat('%',#{t.msg_type},'%')
+                </if>
+                <if test="t.msg_content != null   and t.msg_content != '' ">and msg_content like
+                    concat('%',#{t.msg_content},'%')
+                </if>
+                <if test="t.face_content != null   and t.face_content != ''    ">and face_content like
+                    concat('%',#{t.face_content},'%')
+                </if>
+                <if test="t.topic_id != null   and t.topic_id != ''    ">and topic_id like
+                    concat('%',#{t.topic_id},'%')
+                </if>
+                <if test="t.image_id != null   and t.image_id != ''    ">and image_id like
+                    concat('%',#{t.image_id},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.msg_id != null  and t.msg_id != '' ">and msg_id =
+                    #{t.msg_id}
+                </if>
+                <if test="t.user_from != null  and t.user_from != '' ">and user_from =
+                    #{t.user_from}
+                </if>
+                <if test="t.user_to != null  and t.user_to != '' ">and user_to =
+                    #{t.user_to}
+                </if>
+                <if test="t.msg_type != null  and t.msg_type != ''  ">and msg_type =
+                    #{t.msg_type}
+                </if>
+                <if test="t.msg_content != null  and t.msg_content != ''  ">and msg_content =
+                    #{t.msg_content}
+                </if>
+                <if test="t.face_content != null  and t.face_content != ''  ">and face_content =
+                    #{t.face_content}
+                </if>
+                <if test="t.topic_id != null and t.topic_id != '' ">and topic_id =
+                    #{t.topic_id}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        msg_id = #{msg_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by msg_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="msgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="msgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_msg (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_msg
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="msgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY msg_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_msg
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_msg
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="msgResult">
+        delete from t_msg
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="msgResult">
+        delete from t_msg
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="msgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="msgVO" type="com.hl.insmanager.vo.msg.MsgVO">
+        <result column="msg_id" property="msg_id"/>
+        <result column="user_from" property="user_from"/>
+        <result column="user_to" property="user_to"/>
+        <result column="msg_type" property="msg_type"/>
+        <result column="msg_content" property="msg_content"/>
+        <result column="msg_link" property="msg_link"/>
+        <result column="msg_time" property="msg_time"/>
+        <result column="topic_id" property="topic_id"/>
+    </resultMap>
+
+    <select id="hisMess" resultMap="msgVO">
+        SELECT result1.msg_id, result1.user_from, result1.user_to, result1.msg_type,
+        CASE WHEN result1.msg_type = 1 THEN result1.msg_content
+        WHEN result1.msg_type = 2 THEN result1.face_content
+        WHEN result1.msg_type = 3 THEN tm.image_remote_link
+        WHEN result1.msg_type = 4 THEN tm.image_remote_link
+        END AS 'msg_content', result2.topic_user AS 'topic_user_id', result2.user_name AS 'topic_user_name', result2.user_icon AS 'topic_user_icon',
+        result2.topic_id, result2.topic_desc, result2.image_remote_link AS 'topic_image_remote_link'
+        FROM
+        (
+        SELECT * FROM t_msg tm
+        WHERE ((tm.user_from = #{loginerId} AND tm.user_to = #{msg_user_id})
+        OR (tm.user_from = #{msg_user_id} AND tm.user_to = #{loginerId}))
+        AND tm.msg_time &lt;= #{history_msg_time}
+        ) result1
+        LEFT JOIN t_image tm
+        ON (result1.image_id = tm.image_id)
+        LEFT JOIN (
+        SELECT tp.topic_user, tu.user_name, tu.user_icon,
+        tp.topic_id, tp.topic_desc, ti.image_remote_link
+        FROM t_topic tp
+        INNER JOIN t_user tu
+        ON (tp.topic_user = tu.user_id)
+        INNER JOIN t_topic_images tti
+        ON (tp.topic_id = tti.topic_id AND tti.image_seq = 1)
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id)
+        ) result2
+        ON (result1.topic_id = result2.topic_id)
+        ORDER BY result1.msg_time DESC
+    </select>
+
+    <select id="newMess" resultMap="msgVO">
+        SELECT result1.msg_id, result1.user_from, result1.user_to, result1.msg_type,
+        CASE WHEN result1.msg_type = 1 THEN result1.msg_content
+        WHEN result1.msg_type = 2 THEN result1.face_content
+        WHEN result1.msg_type = 3 THEN tm.image_remote_link
+        WHEN result1.msg_type = 4 THEN tm.image_remote_link
+        END AS 'msg_content', result2.topic_user AS 'topic_user_id', result2.user_name AS 'topic_user_name', result2.user_icon AS 'topic_user_icon',
+        result2.topic_id, result2.topic_desc, result2.image_remote_link AS 'topic_image_remote_link'
+        FROM
+        (
+        SELECT * FROM t_msg tm
+        WHERE ((tm.user_from = #{loginerId} AND tm.user_to = #{msg_user_id})
+        OR (tm.user_from = #{msg_user_id} AND tm.user_to = #{loginerId}))
+        AND tm.msg_time &gt; #{new_msg_time}
+        ) result1
+        LEFT JOIN t_image tm
+        ON (result1.image_id = tm.image_id)
+        LEFT JOIN (
+        SELECT tp.topic_user, tu.user_name, tu.user_icon,
+        tp.topic_id, tp.topic_desc, ti.image_remote_link
+        FROM t_topic tp
+        INNER JOIN t_user tu
+        ON (tp.topic_user = tu.user_id)
+        INNER JOIN t_topic_images tti
+        ON (tp.topic_id = tti.topic_id AND tti.image_seq = 1)
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id)
+        ) result2
+        ON (result1.topic_id = result2.topic_id)
+        ORDER BY result1.msg_time
+    </select>
+
+    <update id="updateMsgRead">
+        UPDATE t_msg tm SET tm.is_read = 1 WHERE tm.user_from = #{msg_user_id} AND tm.user_to = #{loginerId}
+    </update>
+
+    <resultMap id="msgActionVO" type="com.hl.insmanager.vo.msg.MsgActionVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="action_type" property="action_type"/>
+        <result column="topic_id" property="topic_id"/>
+    </resultMap>
+
+    <select id="msgsAction" resultMap="msgActionVO">
+        SELECT * FROM (
+            SELECT tu.user_id, tu.user_name, tu.user_icon,
+            1 AS 'action_type', tf.focus_time AS 'msg_time', '' AS 'topic_id'
+            FROM t_user_focus tf
+            INNER JOIN t_user tu
+            ON (tf.focus_from = tu.user_id AND tf.focus_to = #{loginerId} AND tf.is_read = 0)
+
+            UNION ALL
+
+            SELECT tu1.user_id, tu1.user_name, tu1.user_icon,
+            2 AS 'action_type', tuf1.read_time AS 'msg_time', '' AS 'topic_id'
+            FROM t_user tu1
+            INNER JOIN (
+                SELECT DISTINCT(tu.user_id) AS 'user_id' FROM t_user_focus tuf
+                INNER JOIN t_user tu
+                ON (tuf.focus_to = tu.user_id AND  tuf.focus_from = #{loginerId} AND tu.user_black = 0)
+                INNER JOIN t_topic tt
+                ON (tt.topic_user = tu.user_id AND tt.topic_createtime > tuf.read_time)
+            ) result1
+            ON (tu1.user_id = result1.user_id)
+            INNER JOIN t_user_focus tuf1
+            ON (tuf1.focus_from = #{loginerId} AND tuf1.focus_to = result1.user_id )
+
+            UNION ALL
+
+            SELECT tu.user_id, tu.user_name, tu.user_icon,
+            3 AS 'action_type', tt.topic_createtime AS 'msg_time', tt.topic_id
+            FROM t_topic_at tta
+            INNER JOIN t_topic tt
+            ON (tta.topic_id = tt.topic_id AND tta.user_id = #{loginerId} AND tta.is_read = 0)
+            INNER JOIN t_user tu
+            ON (tt.topic_user = tu.user_id AND tu.user_black = 0)
+
+            UNION ALL
+
+            SELECT tu.user_id, tu.user_name, tu.user_icon, 3 AS 'action_type',
+            result2.createtime AS 'msg_time', tt.topic_id FROM t_user tu
+            INNER JOIN t_topic tt
+            ON (tu.user_id = tt.topic_user )
+            INNER JOIN (
+            SELECT DISTINCT(result1.topic_id) AS 'topic_id', MAX(result1.createtime) AS 'createtime'
+            FROM (
+                SELECT tt.topic_id, ttc.createtime FROM t_topic tt
+                INNER JOIN t_topic_comment ttc
+                ON (tt.topic_id = ttc.topic_id  AND tt.topic_user = #{loginerId} AND ttc.is_read = 0)
+            ) result1 GROUP BY result1.topic_id
+            ) result2
+            ON (tt.topic_id = result2.topic_id)
+        ) result3 ORDER BY msg_time DESC
+    </select>
+
+    <select id="msgsAction1" resultMap="msgActionVO">
+        SELECT * FROM (
+            SELECT tu.user_id, tu.user_name, tu.user_icon,
+            1 AS 'action_type', tf.focus_time AS 'msg_time', '' AS 'topic_id'
+            FROM t_user_focus tf
+            INNER JOIN t_user tu
+            ON (tf.focus_from = tu.user_id AND tf.focus_to = #{loginerId} AND tf.is_read = 0)
+        ) result3 ORDER BY msg_time DESC
+    </select>
+
+    <select id="msgsAction2" resultMap="msgActionVO">
+        SELECT * FROM (
+
+            SELECT tu1.user_id, tu1.user_name, tu1.user_icon,
+            2 AS 'action_type', tuf1.read_time AS 'msg_time', '' AS 'topic_id'
+            FROM t_user tu1
+            INNER JOIN (
+                SELECT DISTINCT(tu.user_id) AS 'user_id' FROM t_user_focus tuf
+                INNER JOIN t_user tu
+                ON (tuf.focus_to = tu.user_id AND  tuf.focus_from = #{loginerId} AND tu.user_black = 0)
+                INNER JOIN t_topic tt
+                ON (tt.topic_user = tu.user_id AND tt.topic_createtime > tuf.read_time)
+            ) result1
+            ON (tu1.user_id = result1.user_id)
+            INNER JOIN t_user_focus tuf1
+            ON (tuf1.focus_from = #{loginerId} AND tuf1.focus_to = result1.user_id )
+
+        ) result3 ORDER BY msg_time DESC
+    </select>
+
+    <select id="msgsAction3" resultMap="msgActionVO">
+        SELECT * FROM (
+
+            SELECT tu.user_id, tu.user_name, tu.user_icon,
+            3 AS 'action_type', tt.topic_createtime AS 'msg_time', tt.topic_id
+            FROM t_topic_at tta
+            INNER JOIN t_topic tt
+            ON (tta.topic_id = tt.topic_id AND tta.user_id = #{loginerId} AND tta.is_read = 0)
+            INNER JOIN t_user tu
+            ON (tt.topic_user = tu.user_id AND tu.user_black = 0)
+
+        ) result3 ORDER BY msg_time DESC
+    </select>
+
+    <select id="msgsAction4" resultMap="msgActionVO">
+        SELECT * FROM (
+
+            SELECT tu.user_id, tu.user_name, tu.user_icon, 3 AS 'action_type',
+            result2.createtime AS 'msg_time', tt.topic_id FROM t_user tu
+            INNER JOIN t_topic tt
+            ON (tu.user_id = tt.topic_user )
+            INNER JOIN (
+            SELECT DISTINCT(result1.topic_id) AS 'topic_id', MAX(result1.createtime) AS 'createtime'
+            FROM (
+                SELECT tt.topic_id, ttc.createtime FROM t_topic tt
+                INNER JOIN t_topic_comment ttc
+                ON (tt.topic_id = ttc.topic_id  AND tt.topic_user = #{loginerId} AND ttc.is_read = 0)
+            ) result1 GROUP BY result1.topic_id
+            ) result2
+            ON (tt.topic_id = result2.topic_id)
+
+        ) result3 ORDER BY msg_time DESC
+    </select>
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

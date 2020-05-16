@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.SysMsgMapper">
+
+    <resultMap type="com.hl.insmanager.module.SysMsg" id="sysMsgResult">
+        <result column="sys_msg_id" property="sys_msg_id"/>
+        <result column="sys_msg_topic" property="sys_msg_topic"/>
+        <result column="sys_msg_content" property="sys_msg_content"/>
+        <result column="createtime" property="createtime"/>
+    </resultMap>
+
+    <sql id="table">
+        t_sys_msg
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            sys_msg_id,
+            sys_msg_topic,
+            sys_msg_content,
+            createtime
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="sys_msg_id != null and sys_msg_id != ''">sys_msg_id,</if>
+            <if test="sys_msg_topic != null and sys_msg_topic != ''">sys_msg_topic,</if>
+            <if test="sys_msg_content != null and sys_msg_content != ''">sys_msg_content,</if>
+            createtime,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="sys_msg_id != null and sys_msg_id != ''">#{sys_msg_id,jdbcType=VARCHAR},</if>
+            <if test="sys_msg_topic != null and sys_msg_topic != ''">#{sys_msg_topic,jdbcType=VARCHAR},</if>
+            <if test="sys_msg_content != null and sys_msg_content != ''">#{sys_msg_content,jdbcType=VARCHAR},</if>
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="sys_msg_topic != null">
+                sys_msg_topic=#{sys_msg_topic,jdbcType=VARCHAR},
+            </if>
+            <if test="sys_msg_content != null and sys_msg_content != ''">
+                sys_msg_content=#{sys_msg_content,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.sys_msg_topic != null and t.sys_msg_topic != '' ">and sys_msg_topic like
+                    concat('%',#{t.sys_msg_topic},'%')
+                </if>
+                <if test="t.sys_msg_content != null   and t.sys_msg_content != '' ">and sys_msg_content like
+                    concat('%',#{t.sys_msg_content},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.sys_msg_id != null  and t.sys_msg_id != '' ">and sys_msg_id =
+                    #{t.sys_msg_id}
+                </if>
+                <if test="t.sys_msg_topic != null  and t.sys_msg_topic != '' ">and sys_msg_topic =
+                    #{t.sys_msg_topic}
+                </if>
+                <if test="t.sys_msg_content != null  and t.sys_msg_content != '' ">and sys_msg_content =
+                    #{t.sys_msg_content}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        sys_msg_id = #{sys_msg_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by sys_msg_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="sysMsgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_sys_msg
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="sysMsgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_sys_msg
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_sys_msg (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_sys_msg
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="sysMsgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_sys_msg
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY createtime desc
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_sys_msg
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_sys_msg
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="sysMsgResult">
+        delete from t_sys_msg
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="sysMsgResult">
+        delete from t_sys_msg
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="sysMsgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_sys_msg
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+    <select id="sysMsgsCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_sys_msg tsm
+        INNER JOIN t_sys_msg_read tsmr
+        ON (tsmr.user_id = #{user_id}
+        AND tsm.createtime > tsmr.read_time)
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_sys_msg tsm
+    </select>
+
+    <select id="getFirst" resultMap="sysMsgResult">
+        select
+        <include refid="tableColumns"/>
+        from t_sys_msg
+        ORDER BY createtime DESC LIMIT 1
+    </select>
+
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

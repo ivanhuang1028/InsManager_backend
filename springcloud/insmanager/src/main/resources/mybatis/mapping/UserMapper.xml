@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.UserMapper">
+
+    <resultMap type="com.hl.insmanager.module.User" id="userResult">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_desc" property="user_desc"/>
+        <result column="user_school" property="user_school"/>
+        <result column="user_gender" property="user_gender"/>
+        <result column="user_birthday" property="user_birthday"/>
+        <result column="user_region" property="user_region"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="user_phone" property="user_phone"/>
+        <result column="user_weixin_openid" property="user_weixin_openid"/>
+        <result column="user_weixin_account" property="user_weixin_account"/>
+        <result column="user_hot" property="user_hot"/>
+        <result column="user_hot_time" property="user_hot_time"/>
+        <result column="user_black" property="user_black"/>
+        <result column="createtime" property="createtime"/>
+        <result column="createuser" property="createuser"/>
+        <result column="update_latest_time" property="update_latest_time"/>
+    </resultMap>
+
+    <sql id="table">
+        t_user
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            user_id,
+            user_name,
+            user_desc,
+            user_school,
+            user_gender,
+            user_birthday,
+            user_region,
+            user_icon,
+            user_phone,
+            user_weixin_openid,
+            user_weixin_account,
+            user_hot,
+            user_hot_time,
+            user_black,
+            createtime,
+            createuser,
+            update_latest_time
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="user_id != null and user_id != ''">user_id,</if>
+            <if test="user_name != null and user_name != ''">user_name,</if>
+            <if test="user_desc != null and user_desc != ''">user_desc,</if>
+            <if test="user_school != null and user_school != '' ">user_school,</if>
+            <if test="user_gender != null ">user_gender,</if>
+            <if test="user_birthday != null and user_birthday != ''">user_birthday,</if>
+            <if test="user_region != null and user_region != ''">user_region,</if>
+            <if test="user_icon != null and user_icon != ''">user_icon,</if>
+            <if test="user_phone != null and user_phone != ''">user_phone,</if>
+            <if test="user_weixin_openid != null and user_weixin_openid != ''">user_weixin_openid,</if>
+            <if test="user_weixin_account != null and user_weixin_account != ''">user_weixin_account,</if>
+            <if test="user_hot != null ">user_hot,</if>
+            <if test="user_hot_time != null ">user_hot_time,</if>
+            <if test="user_black != null and user_black != ''">user_black,</if>
+            createtime,
+            <if test="createuser != null and createuser != ''">createuser,</if>
+            <if test="update_latest_time != null ">update_latest_time,</if>
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="user_id != null and user_id != ''">#{user_id,jdbcType=VARCHAR},</if>
+            <if test="user_name != null and user_name != ''">#{user_name,jdbcType=VARCHAR},</if>
+            <if test="user_desc != null and user_desc != ''">#{user_desc,jdbcType=VARCHAR},</if>
+            <if test="user_school != null and user_school != ''">#{user_school},</if>
+            <if test="user_gender != null ">#{user_gender},</if>
+            <if test="user_birthday != null and user_birthday != ''">#{user_birthday,jdbcType=VARCHAR},</if>
+            <if test="user_region != null and user_region != ''">#{user_region},</if>
+            <if test="user_icon != null and user_icon != ''">#{user_icon,jdbcType=VARCHAR},</if>
+            <if test="user_phone != null and user_phone != ''">#{user_phone,jdbcType=VARCHAR},</if>
+            <if test="user_weixin_openid != null and user_weixin_openid != ''">#{user_weixin_openid,jdbcType=VARCHAR},</if>
+            <if test="user_weixin_account != null and user_weixin_account != ''">#{user_weixin_account,jdbcType=VARCHAR},</if>
+            <if test="user_hot != null ">#{user_hot},</if>
+            <if test="user_hot_time != null ">#{user_hot_time},</if>
+            <if test="user_black != null and user_black != ''">#{user_black,jdbcType=VARCHAR},</if>
+            now(),
+            <if test="createuser != null and createuser != ''">#{createuser,jdbcType=VARCHAR},</if>
+            <if test="update_latest_time != null and update_latest_time != ''">#{update_latest_time,jdbcType=VARCHAR},</if>
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="user_name != null">
+                user_name=#{user_name,jdbcType=VARCHAR},
+            </if>
+            <if test="user_desc != null and user_desc != ''">
+                user_desc=#{user_desc,jdbcType=VARCHAR},
+            </if>
+            <if test="user_school != null ">
+                user_school=#{user_school},
+            </if>
+            <if test="user_gender != null ">
+                user_gender=${user_gender},
+            </if>
+            <if test="user_birthday != null and user_birthday != ''">
+                user_birthday=#{user_birthday,jdbcType=VARCHAR},
+            </if>
+            <if test="user_region != null and user_region != ''">
+                user_region=#{user_region,jdbcType=VARCHAR},
+            </if>
+            <if test="user_icon != null and user_icon != ''">
+                user_icon=#{user_icon,jdbcType=VARCHAR},
+            </if>
+            <if test="user_phone != null and user_phone != ''">
+                user_phone=#{user_phone},
+            </if>
+            <if test="user_weixin_openid != null and user_weixin_openid != ''">
+                user_weixin_account=#{user_weixin_account,jdbcType=VARCHAR},
+            </if>
+            <if test="user_weixin_account != null and user_weixin_account != ''">
+                user_weixin_account=#{user_weixin_account,jdbcType=VARCHAR},
+            </if>
+            <if test="user_hot != null ">
+                user_hot=#{user_hot},
+            </if>
+            <if test="user_hot_time != null and user_hot_time != ''">
+                user_hot_time=#{user_hot_time,jdbcType=VARCHAR},
+            </if>
+            <if test="user_black != null ">
+                user_black=#{user_black},
+            </if>
+            <if test="update_latest_time != null and update_latest_time != ''">
+                update_latest_time=#{update_latest_time},
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.user_name != null and t.user_name != '' ">and user_name like
+                    concat('%',#{t.user_name},'%')
+                </if>
+                <if test="t.user_desc != null   and t.user_desc != '' ">and user_desc like
+                    concat('%',#{t.user_desc},'%')
+                </if>
+                <if test="t.user_school != null and t.user_school != '' ">and user_school like
+                    concat('%',#{t.user_school},'%')
+                </if>
+                <if test="t.user_gender != null  ">and user_gender like
+                    concat('%',#{t.user_gender},'%')
+                </if>
+                <if test="t.user_birthday != null and t.user_birthday != '' ">and user_birthday like
+                    concat('%',#{t.user_birthday},'%')
+                </if>
+                <if test="t.user_region != null   and t.user_region != ''    ">and user_region like
+                    concat('%',#{t.user_region},'%')
+                </if>
+                <if test="t.user_phone != null   and t.user_phone != ''    ">and user_phone like
+                    concat('%',#{t.user_phone},'%')
+                </if>
+                <if test="t.user_weixin_openid != null   and t.user_weixin_openid != ''    ">and user_weixin_openid like
+                    concat('%',#{t.user_weixin_openid},'%')
+                </if>
+                <if test="t.user_weixin_account != null   and t.user_weixin_account != ''    ">and user_weixin_account like
+                    concat('%',#{t.user_weixin_account},'%')
+                </if>
+                <if test="t.user_hot != null   and t.user_hot != ''    ">and user_hot like
+                    concat('%',#{t.user_hot},'%')
+                </if>
+                <if test="t.user_black != null   and t.user_black != ''    ">and user_black like
+                    concat('%',#{t.user_black},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.user_id != null  and t.user_id != '' ">and user_id =
+                    #{t.user_id}
+                </if>
+                <if test="t.user_name != null  and t.user_name != '' ">and user_name =
+                    #{t.user_name}
+                </if>
+                <if test="t.user_desc != null  and t.user_desc != '' ">and user_desc =
+                    #{t.user_desc}
+                </if>
+                <if test="t.user_school != null  and t.user_school != ''  ">and user_school =
+                    #{t.user_school}
+                </if>
+                <if test="t.user_gender != null  and t.user_gender != ''  ">and user_gender =
+                    #{t.user_gender}
+                </if>
+                <if test="t.user_birthday != null  and t.user_birthday != ''  ">and user_birthday =
+                    #{t.user_birthday}
+                </if>
+                <if test="t.user_region != null and t.user_region != '' ">and user_region =
+                    #{t.user_region}
+                </if>
+                <if test="t.user_phone != null and t.user_phone != '' ">and user_phone =
+                    #{t.user_phone}
+                </if>
+                <if test="t.user_weixin_openid != null and t.user_weixin_openid != '' ">and user_weixin_openid =
+                    #{t.user_weixin_openid}
+                </if>
+                <if test="t.user_weixin_account != null and t.user_weixin_account != '' ">and user_weixin_account =
+                    #{t.user_weixin_account}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        user_id = #{user_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by user_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="userResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="userResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_user (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_user
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="userResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY user_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_user
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_user
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="userResult">
+        delete from t_user
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="userResult">
+        delete from t_user
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="userResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+    <select id="isBefore" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_user tu
+        INNER JOIN t_user tu1
+        ON (tu.user_id = #{logierId}
+        AND tu1.user_id = #{user_id}
+        AND tu.createtime &lt;= tu1.createtime)
+    </select>
+
+    <resultMap id="userVO" type="com.hl.insmanager.vo.user.UserVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="focus_status" property="focus_status"/>
+    </resultMap>
+
+    <select id="focusTos" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+             ELSE 1
+        END AS 'focus_status'
+         FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
+        WHERE tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_name LIKE concat('%',#{key},'%')
+        </if>
+        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+    </select>
+
+    <select id="usersRecommend" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+        ELSE 1
+        END AS 'focus_status'
+        FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
+        WHERE tu.user_black = 0
+        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+    </select>
+
+    <select id="users" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+        ELSE 1
+        END AS 'focus_status'
+        FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId} )
+        WHERE tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_name LIKE concat('%',#{key},'%')
+        </if>
+        ORDER BY tu.createtime DESC
+    </select>
+
+    <select id="usersLabel" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+             ELSE 1
+        END AS 'focus_status'
+         FROM t_user tu
+        INNER JOIN (
+           SELECT DISTINCT tu1.user_id FROM t_user tu1
+           INNER JOIN t_user_label tul
+           ON (tu1.user_id = tul.user_id
+            <if test="labelIds !=null and labelIds.size!=0">
+                AND tul.dic_id IN
+                <foreach collection="labelIds" item="id" separator="," close=")" open="(" index="index">
+                    #{id}
+                </foreach>
+            </if>
+           AND tu1.user_black = 0)
+        ) result1
+        ON (tu.user_id = result1.user_id)
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId})
+        ORDER BY tu.user_hot DESC, tu.user_hot_time DESC, tu.createtime DESC
+    </select>
+
+    <select id="usersRegion" resultMap="userVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        CASE WHEN tuf.focus_id IS NULL THEN 0
+        ELSE 1
+        END AS 'focus_status'
+        FROM t_user tu
+        LEFT JOIN t_user_focus tuf
+        ON (tuf.focus_to = tu.user_id AND tuf.focus_from = #{logierId})
+        WHERE tu.user_black = 0
+        <if test="key != null  and key != ''  ">
+            AND tu.user_region LIKE concat('%',#{key},'%')
+        </if>
+        ORDER BY tu.createtime DESC
+    </select>
+
+    <resultMap id="userInfoVO" type="com.hl.insmanager.vo.user.UserInfoVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="user_desc" property="user_desc"/>
+        <result column="user_gender" property="user_gender"/>
+        <result column="user_age" property="user_age"/>
+        <result column="user_region" property="user_region"/>
+        <result column="user_labels" property="user_labels"/>
+        <result column="user_topic_num" property="user_topic_num"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_focused_num" property="user_focused_num"/>
+        <result column="user_focus_num" property="user_focus_num"/>
+    </resultMap>
+
+    <select id="usersInfo" resultMap="userInfoVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tu.user_gender, TIMESTAMPDIFF(YEAR, tu.user_birthday, CURDATE()) AS 'user_age',
+        tu.user_region, (SELECT COUNT(1) FROM t_topic tt WHERE tt.topic_user = #{user_id} AND tt.is_valid = 1 ) AS 'user_topic_num',
+        (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_to = #{user_id} ) AS 'user_focused_num',
+        (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_from = #{user_id} ) AS 'user_focus_num'
+        FROM t_user tu
+        WHERE tu.user_id = #{user_id}
+    </select>
+
+    <resultMap id="userDetailInfoVO" type="com.hl.insmanager.vo.user.UserDetailInfoVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="user_desc" property="user_desc"/>
+        <result column="user_school" property="user_school"/>
+        <result column="user_gender" property="user_gender"/>
+        <result column="user_birthday" property="user_birthday"/>
+        <result column="user_region" property="user_region"/>
+    </resultMap>
+
+    <select id="usersDetailInfo" resultMap="userDetailInfoVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon,
+        tu.user_desc, tu.user_school, tu.user_gender,
+        tu.user_birthday, tu.user_region
+        FROM t_user tu WHERE tu.user_id = #{logierId}
+    </select>
+
+    <resultMap id="userLabelVO" type="com.hl.insmanager.vo.user.UserLabelVO">
+        <result column="dic_id" property="dic_id"/>
+        <result column="dic_value" property="dic_value"/>
+        <result column="is_selected" property="is_selected"/>
+    </resultMap>
+
+    <select id="usersLabels" resultMap="userLabelVO">
+        SELECT td.dic_id, td.dic_value,
+        CASE WHEN tul.tl_id IS NULL THEN 0
+        ELSE 1 END AS 'is_selected'
+         FROM t_dictionary td
+        LEFT JOIN t_user_label tul
+        ON (td.dic_id = tul.dic_id AND tul.user_id = #{logierId})
+        WHERE td.dic_name = 'label'
+        ORDER BY td.dic_seq
+    </select>
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

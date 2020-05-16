@@ -1,0 +1,51 @@
+#指定读取哪个环境的数据
+spring:
+  profiles:
+    active: @profileActive@
+  application:
+    name: system
+#Mybatis
+mybatis:
+  mapper-locations: classpath:mybatis/mapping/*.xml    #mapper映射文件路径
+  type-aliases-package:  com.pci.ssc.system.module,com.pci.ssc.system.vo  #实体类路径
+  config-location: classpath:mybatis/mybatis-config.xml  #Mybatis总配置文件路径
+
+#pagehelper 分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: ture
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check
+
+# jwt
+jwt:
+  encodedKey: L7A/6zARSkK1j7Vd5SDD9pSSqZlqF7mAhiOgRbgv9Smce6tf4cJnvKOjtKPxNNnWQj+2lQEScm3XIUjhW+YVZg==
+  audience: ins
+  issuer: hl
+  expDates: 7
+
+#自定义的属性和值例子
+my-props:
+  simpleProp: simplePropValue
+  arrayProps: 1,2,3,4,5
+  listProp1:
+  - name: abc
+    value: abcValue
+  - name: efg
+    value: efgValue
+  listProp2:
+  - config2Value1
+  - config2Vavlue2
+  mapProps:
+    key1: value1
+    key2: value2
+
+#api管理
+api-management:
+  exclude-path-patterns:
+    - /login/weixin
+    - /login/onekey
+
+# 分页默认配置
+pageSize: 10

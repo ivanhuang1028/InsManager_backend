@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.UserCollectMapper">
+
+    <resultMap type="com.hl.insmanager.module.UserCollect" id="userCollectResult">
+        <result column="uc_id" property="uc_id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="topic_id" property="topic_id"/>
+        <result column="collecttime" property="collecttime"/>
+    </resultMap>
+
+    <sql id="table">
+        t_user_collect
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            uc_id,
+            user_id,
+            topic_id,
+            collecttime
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="uc_id != null and uc_id != ''">uc_id,</if>
+            <if test="user_id != null and user_id != ''">user_id,</if>
+            <if test="topic_id != null and topic_id != ''">topic_id,</if>
+            collecttime,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="uc_id != null and uc_id != ''">#{uc_id,jdbcType=VARCHAR},</if>
+            <if test="user_id != null and user_id != ''">#{user_id,jdbcType=VARCHAR},</if>
+            <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="topic_id != null">
+                topic_id=#{topic_id,jdbcType=VARCHAR},
+            </if>
+            <if test="user_id != null and user_id != ''">
+                user_id=#{user_id,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.topic_id != null and t.topic_id != '' ">and topic_id like
+                    concat('%',#{t.topic_id},'%')
+                </if>
+                <if test="t.user_id != null   and t.user_id != '' ">and user_id like
+                    concat('%',#{t.user_id},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.user_id != null  and t.user_id != '' ">and user_id =
+                    #{t.user_id}
+                </if>
+                <if test="t.topic_id != null  and t.topic_id != '' ">and topic_id =
+                    #{t.topic_id}
+                </if>
+                <if test="t.collecttime != null  and t.collecttime != ''  ">and collecttime =
+                    #{t.collecttime}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        uc_id = #{uc_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by user_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="userCollectResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_collect
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="userCollectResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_collect
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_user_collect (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_user_collect
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="userCollectResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_collect
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY user_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_user_collect
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_user_collect
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="userCollectResult">
+        delete from t_user_collect
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="userCollectResult">
+        delete from t_user_collect
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="userCollectResult">
+        select
+        <include refid="tableColumns"/>
+        from t_user_collect
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="userCollectVO" type="com.hl.insmanager.vo.usercollect.UserCollectVO">
+        <result column="topic_id" property="topic_id"/>
+        <result column="topic_remote_link" property="topic_remote_link"/>
+    </resultMap>
+
+    <select id="collects" resultMap="userCollectVO">
+        SELECT tuc.topic_id, ti.image_remote_link AS 'topic_remote_link' FROM t_user_collect tuc
+        INNER JOIN t_topic tt
+        ON (tuc.topic_id = tt.topic_id AND tuc.user_id = #{loginerId})
+        INNER JOIN t_topic_images tti
+        ON (tti.topic_id = tt.topic_id AND tti.image_seq = 1)
+        INNER JOIN t_image ti
+        ON (tti.image_id = ti.image_id)
+        ORDER BY tuc.collecttime DESC
+    </select>
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

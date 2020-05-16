@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.MsgSessionMapper">
+
+    <resultMap type="com.hl.insmanager.module.MsgSession" id="msgSessionResult">
+        <result column="ms_id" property="ms_id"/>
+        <result column="user_ids" property="user_ids"/>
+        <result column="session_time" property="session_time"/>
+    </resultMap>
+
+    <sql id="table">
+        t_msg_session
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            ms_id,
+            user_ids,
+            session_time
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="ms_id != null and ms_id != ''">ms_id,</if>
+            <if test="user_ids != null and user_ids != ''">user_ids,</if>
+            session_time,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="ms_id != null and ms_id != ''">#{ms_id,jdbcType=VARCHAR},</if>
+            <if test="user_ids != null and user_ids != ''">#{user_ids,jdbcType=VARCHAR},</if>
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="user_ids != null">
+                user_ids=#{user_ids,jdbcType=VARCHAR},
+            </if>
+            session_time=now(),
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.user_ids != null and t.user_ids != '' ">and user_ids like
+                    concat('%',#{t.user_ids},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.ms_id != null  and t.ms_id != '' ">and ms_id =
+                    #{t.ms_id}
+                </if>
+                <if test="t.user_ids != null  and t.user_ids != '' ">and user_ids =
+                    #{t.user_ids}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        ms_id = #{ms_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by ms_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="msgSessionResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg_session
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="msgSessionResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg_session
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_msg_session (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_msg_session
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="msgSessionResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg_session
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY ms_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_msg_session
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_msg_session
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="msgSessionResult">
+        delete from t_msg_session
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="msgSessionResult">
+        delete from t_msg_session
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="msgSessionResult">
+        select
+        <include refid="tableColumns"/>
+        from t_msg_session
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+    <resultMap id="msgsUsersVO" type="com.hl.insmanager.vo.msg.MsgsUsersVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="lastest_time" property="lastest_time"/>
+    </resultMap>
+
+    <select id="msgsusers" resultMap="msgsUsersVO">
+        SELECT tu.user_id, tu.user_name, tu.user_icon, tms.session_time AS 'lastest_time' FROM t_msg_session tms
+        INNER JOIN t_user tu
+        ON (tms.user_ids LIKE concat('%',#{user_id},'%')
+        AND REPLACE(REPLACE(tms.user_ids,#{user_id},""),",", "") = tu.user_id)
+        ORDER BY tms.session_time
+    </select>
+
+    <update id="updateUserIds">
+        UPDATE t_msg_session SET session_time = NOW() WHERE user_ids = #{userIds}
+    </update>
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

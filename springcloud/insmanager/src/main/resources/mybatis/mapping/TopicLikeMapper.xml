@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+Copyright (c) 2016 by ivan.huang all rights reserved  
+*********************************************** 
+         符号转义说明
+    &lt;          < 
+    &gt;          >  
+    &lt;&gt;     <>
+    &amp;        & 
+    &apos;       '
+    &quot;       "
+  <![CDATA[ 这里写你的SQL或者符号 ]]> 
+ -->
+<mapper namespace="com.hl.insmanager.mapper.TopicLikeMapper">
+
+    <resultMap type="com.hl.insmanager.module.TopicLike" id="topicLikeResult">
+        <result column="like_id" property="like_id"/>
+        <result column="topic_id" property="topic_id"/>
+        <result column="user_id" property="user_id"/>
+        <result column="is_read" property="is_read"/>
+        <result column="createtime" property="createtime"/>
+    </resultMap>
+
+    <sql id="table">
+        t_topic_like
+    </sql>
+
+    <sql id="tableColumns">
+        <trim>
+            like_id,
+            topic_id,
+            user_id,
+            is_read,
+            createtime
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库列 -->
+    <sql id="insertColumns">
+        <trim suffix="" suffixOverrides=",">
+            <if test="like_id != null and like_id != ''">like_id,</if>
+            <if test="topic_id != null and topic_id != ''">topic_id,</if>
+            <if test="user_id != null and user_id != ''">user_id,</if>
+            <if test="is_read != null and is_read != '' ">is_read,</if>
+            createtime,
+        </trim>
+    </sql>
+
+    <!-- insertColumns 入库值 -->
+    <sql id="insertParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="like_id != null and like_id != ''">#{like_id,jdbcType=VARCHAR},</if>
+            <if test="topic_id != null and topic_id != ''">#{topic_id,jdbcType=VARCHAR},</if>
+            <if test="user_id != null and user_id != ''">#{user_id,jdbcType=VARCHAR},</if>
+            <if test="is_read != null and is_read != ''">#{is_read},</if>
+            now(),
+        </trim>
+    </sql>
+
+    <!-- updateParams  更新列 -->
+    <sql id="updateParams">
+        <trim suffix="" suffixOverrides=",">
+            <if test="topic_id != null">
+                topic_id=#{topic_id,jdbcType=VARCHAR},
+            </if>
+            <if test="user_id != null and user_id != ''">
+                user_id=#{user_id,jdbcType=VARCHAR},
+            </if>
+            <if test="is_read != null ">
+                is_read=#{is_read},
+            </if>
+            createtime=now(),
+        </trim>
+    </sql>
+
+    <!-- fields  模糊查询 -->
+    <sql id="allAndLike">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.topic_id != null and t.topic_id != '' ">and topic_id like
+                    concat('%',#{t.topic_id},'%')
+                </if>
+                <if test="t.user_id != null   and t.user_id != '' ">and user_id like
+                    concat('%',#{t.user_id},'%')
+                </if>
+                <if test="t.is_read != null  ">and is_read like
+                    concat('%',#{t.is_read},'%')
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- fields  精准查询 -->
+    <sql id="allAndEqual">
+        <trim suffix="" suffixOverrides=",">
+            <if test="t !=null ">
+                <if test="t.like_id != null  and t.like_id != '' ">and like_id =
+                    #{t.like_id}
+                </if>
+                <if test="t.topic_id != null  and t.topic_id != '' ">and topic_id =
+                    #{t.topic_id}
+                </if>
+                <if test="t.user_id != null  and t.user_id != '' ">and user_id =
+                    #{t.user_id}
+                </if>
+                <if test="t.is_read != null  and t.is_read != ''  ">and is_read =
+                    #{t.is_read}
+                </if>
+            </if>
+        </trim>
+    </sql>
+
+    <!-- columnKey  主键 列名称 ,视图获取不到主键 需要设置 -->
+    <sql id="primaryKeys">
+        like_id = #{like_id}
+    </sql>
+
+
+    <sql id="queryParamSql">
+        <where>
+            <choose>
+                <when test="queryParam !=null and queryParam.like==true">
+                    <include refid="allAndLike"/>
+                </when>
+                <otherwise>
+                    <include refid="allAndEqual"/>
+                </otherwise>
+            </choose>
+            <if test="queryParam !=null and queryParam.queryCondition !=null">
+                <![CDATA[${queryParam.queryCondition}]]>
+            </if>
+
+        </where>
+
+        <choose>
+            <when test="queryParam !=null and queryParam.orderFiled !=null and queryParam.orderFiled!=''">
+                order by <![CDATA[${queryParam.orderFiled} ${queryParam.orderDirection}]]>
+            </when>
+            <when test="queryParam !=null and queryParam.orderFieldListStr !=null and queryParam.orderFieldListStr!=''">
+                order by <![CDATA[${queryParam.orderFieldListStr}]]>
+            </when>
+            <otherwise>
+                order by like_id desc
+            </otherwise>
+        </choose>
+
+        <if test="queryParam !=null and queryParam.limitOffSet !=null">
+            limit <![CDATA[${queryParam.limitOffSet},${queryParam.pageSize}]]>
+        </if>
+
+    </sql>
+
+    <!-- BaseMapper 对应接口 start  -->
+    <!-- 1.  查询,主键查询   -->
+    <select id="selectByPrimaryKey" resultMap="topicLikeResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_like
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </select>
+
+    <!-- 2. 查询,精准查询   -->
+    <select id="selectByEqualT" resultMap="topicLikeResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_like
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 3. 添加,插入记录   -->
+    <insert id="insert">
+        insert into t_topic_like (<include refid="insertColumns"/>) values(<include refid="insertParams"/>);
+    </insert>
+
+    <!-- 4. 修改,主键更新  -->
+    <update id="updateByPrimaryKey">
+        update t_topic_like
+        <set>
+            <include refid="updateParams"/>
+        </set>
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </update>
+
+    <!-- 5. 查询,实体模糊查询   -->
+    <select id="selectByBlurryT" resultMap="topicLikeResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_like
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+        ORDER BY like_id
+    </select>
+
+    <!-- 6. 查询 ,总行数,分页 ,模型 -->
+    <select id="countByBlurryT" resultType="java.lang.Integer">
+        select count(1) from t_topic_like
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- 7. 删除,主键删除   -->
+    <delete id="deleteByPrimaryKey">
+        delete from t_topic_like
+        <where>
+            <include refid="primaryKeys"/>
+        </where>
+    </delete>
+
+    <!-- 8. 删除,按实体精准删除   -->
+    <select id="deleteByT" resultMap="topicLikeResult">
+        delete from t_topic_like
+        <where>
+            <include refid="allAndEqual"/>
+        </where>
+    </select>
+
+    <!-- 9. 删除,按实体多字段模糊删除   -->
+    <select id="deleteByBlurryT" resultMap="topicLikeResult">
+        delete from t_topic_like
+        <where>
+            <include refid="allAndLike"/>
+        </where>
+    </select>
+
+
+    <select id="listByModel" resultMap="topicLikeResult">
+        select
+        <include refid="tableColumns"/>
+        from t_topic_like
+        <include refid="queryParamSql"/>
+    </select>
+
+    <!-- BaseMapper 对应接口 end   -->
+
+
+
+    <!-- OtherModule Mapper 对应接口 start  -->
+
+    <!-- OtherModule Mapper 对应接口 end  -->
+
+</mapper>

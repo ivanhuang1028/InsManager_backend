@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="30 seconds">
+
+        <springProperty scope="context" name="logLevel" source="log.level"/>
+        <springProperty scope="context" name="logPath" source="log.path"/>
+
+
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%class:%line] - %m %n</pattern>
+            </encoder>
+        </appender>
+
+        <appender name="ALL-FILE-OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${logPath}/sys.log</file>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%class:%line] - %m %n</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${logPath}/sys.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+                <!-- 30 days -->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+        </appender>
+
+            <appender name="ERROR-FILE-OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${logPath}/sys-error.log</file>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%class:%line] - %m %n</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${logPath}/sys-error.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+                <!-- 30 days -->
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+                <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                    <level>error</level>
+                    <onMatch>ACCEPT</onMatch>
+                    <onMismatch>DENY</onMismatch>
+                </filter>
+        </appender>
+
+        <root level="${logLevel}">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="ALL-FILE-OUT" />
+                <appender-ref ref="ERROR-FILE-OUT" />
+        </root>
+
+</configuration>
