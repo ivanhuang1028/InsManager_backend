@@ -10,4 +10,6 @@ public interface TopicCommentService<T> extends BaseService<T>, TopicCommentMapp
     List<CommentVO> comments(String topic_id);
 
     void read(String topic_id);
+
+    Integer countToday(String start_date, String end_date);
 }

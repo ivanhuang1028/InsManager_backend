@@ -97,10 +97,10 @@ public abstract class BaseServiceImp<T> implements BaseService<T> {
      * 6. 简单模糊查询列表总数
      */
     @Override
-    public Integer countByBlurryT(T t) {
+    public Integer countByBlurryT(T t, QueryParam queryParam) {
         try {
 
-            return mapper.countByBlurryT(t);
+            return mapper.countByBlurryT(t, queryParam);
         } catch (Exception e) {
             log.error("", e);
         }

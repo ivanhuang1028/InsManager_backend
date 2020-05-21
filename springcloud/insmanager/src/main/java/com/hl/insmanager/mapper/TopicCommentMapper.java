@@ -16,4 +16,6 @@ public interface TopicCommentMapper<T> extends BaseMapper<T> {
 
     void read(@Param("topic_id") String topic_id);
 
+    Integer countToday(@Param("start_date") String start_date, @Param("end_date") String end_date);
+
 }

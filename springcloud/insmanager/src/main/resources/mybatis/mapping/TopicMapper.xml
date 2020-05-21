@@ -480,6 +480,17 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY ttc.createtime DESC LIMIT 0,2
     </select>
 
+    <select id="countToday" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_topic tt
+        WHERE 1=1
+        <if test="start_date != null  and start_date != ''  ">
+            AND tt.topic_createtime &gt;= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND tt.topic_createtime &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

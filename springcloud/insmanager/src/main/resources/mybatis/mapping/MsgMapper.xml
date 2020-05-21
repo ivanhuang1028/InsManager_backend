@@ -501,6 +501,17 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ) result3 ORDER BY msg_time DESC
     </select>
 
+    <select id="countToday" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_msg tm
+        WHERE tm.msg_type = 5
+        <if test="start_date != null  and start_date != ''  ">
+            AND tm.msg_time &gt;= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND tm.msg_time &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

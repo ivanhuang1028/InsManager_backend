@@ -4,8 +4,10 @@ import com.hl.common.constants.Constants;
 import com.hl.common.constants.Result;
 import com.hl.common.util.DateUtil;
 import com.hl.common.util.JwtHelper;
+import com.hl.insmanager.module.BackendAccount;
 import com.hl.insmanager.module.User;
 import com.hl.insmanager.properties.JwtConfig;
+import com.hl.insmanager.service.BackendAccountService;
 import com.hl.insmanager.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     private JwtConfig jwtConfig;
 
     @Autowired
-    private UserService<User> userService;
+    private BackendAccountService<BackendAccount> backendAccountService;
 
     @Override
     public void afterCompletion(HttpServletRequest request,
@@ -108,9 +110,9 @@ public class AuthInterceptor implements HandlerInterceptor {
      * 验证 用户 名字，标识
      */
     private boolean checkValid(String user_name,  String userid) throws Exception{
-        User u = userService.selectByPrimaryKey(userid);
-        if(u != null){
-            if(StringUtils.equals(user_name, u.getUser_name())){
+        BackendAccount backendAccount = backendAccountService.selectByPrimaryKey(userid);
+        if(backendAccount != null){
+            if(StringUtils.equals(user_name, backendAccount.getAccount_name())){
                 return true;
             }
         }

@@ -46,6 +46,7 @@ api-management:
   exclude-path-patterns:
     - /login/weixin
     - /login/onekey
+    - /backend/login
 
 # 分页默认配置
 pageSize: 10

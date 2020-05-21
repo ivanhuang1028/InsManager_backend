@@ -1,6 +1,7 @@
 package com.hl.insmanager.service;
 
 import com.hl.insmanager.mapper.UserMapper;
+import com.hl.insmanager.vo.backend.UserBackendVO;
 import com.hl.insmanager.vo.user.UserDetailInfoVO;
 import com.hl.insmanager.vo.user.UserInfoVO;
 import com.hl.insmanager.vo.user.UserLabelVO;
@@ -27,4 +28,8 @@ public interface UserService<T> extends BaseService<T>, UserMapper<T> {
     List<UserLabelVO> usersLabels(String loginerId);
 
     List<UserVO> usersRecommend(String loginerId);
+
+    Integer countToday(String start_date, String end_date);
+
+    List<UserBackendVO> usersBackend(String start_date, String end_date, String user_gender, String user_region, String user_school, String key);
 }

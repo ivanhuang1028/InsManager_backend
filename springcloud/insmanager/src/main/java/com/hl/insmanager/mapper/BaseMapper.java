@@ -23,7 +23,7 @@ public interface BaseMapper<T> {
 
     List<T> selectByBlurryT(@Param(value = "t") T blurryT);  //5. 简单模糊查询
 
-    Integer countByBlurryT(@Param(value = "t") T blurryT) throws Exception;  //6. 简单模糊查询列表总数
+    Integer countByBlurryT(@Param(value = "t") T blurryT, @Param(value = "queryParam") QueryParam queryParam) throws Exception;  //6. 简单模糊查询列表总数
 
     Integer deleteByPrimaryKey(Object key) throws Exception;  //7. 通过id删除对象
 

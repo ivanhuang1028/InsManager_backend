@@ -520,6 +520,51 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY td.dic_seq
     </select>
 
+    <select id="countToday" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_user tu
+        WHERE 1=1
+        <if test="start_date != null  and start_date != ''  ">
+            AND tu.createtime &gt;= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND tu.createtime &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+    </select>
+
+    <resultMap id="userBackendVO" type="com.hl.insmanager.vo.backend.UserBackendVO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+        <result column="createtime" property="createtime"/>
+        <result column="topic_num" property="topic_num"/>
+        <result column="latest_ope_time" property="latest_ope_time"/>
+    </resultMap>
+
+    <select id="usersBackend" resultMap="userBackendVO">
+        SELECT tu.user_id, tu.user_name, tu.createtime,
+        (SELECT COUNT(1) FROM t_topic tt WHERE tt.topic_user = tu.user_id ) AS 'topic_num',
+        tu.update_latest_time AS 'latest_ope_time' FROM t_user tu
+        WHERE 1=1
+        <if test="start_date != null  and start_date != ''  ">
+            AND tu.createtime >= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND tu.createtime &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+        <if test="user_gender != null  and user_gender != ''  ">
+            AND tu.user_gender = ${user_gender}
+        </if>
+        <if test="user_region != null  and user_region != ''  ">
+            AND tu.user_region LIKE CONCAT('%', #{user_region}, '%')
+        </if>
+        <if test="user_school != null  and user_school != ''  ">
+            AND tu.user_school LIKE CONCAT('%', #{user_school}, '%')
+        </if>
+        <if test="key != null  and key != ''  ">
+            AND ( tu.user_name LIKE CONCAT('%', #{key}, '%') OR tu.user_phone LIKE CONCAT('%', #{key}, '%') )
+        </if>
+        ORDER BY tu.createtime
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

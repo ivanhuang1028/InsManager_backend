@@ -39,4 +39,9 @@ public class TopicCommentServiceImp<T> extends BaseServiceImp<T> implements Topi
     public void read(String topic_id) {
         getMapper().read(topic_id);
     }
+
+    @Override
+    public Integer countToday(String start_date, String end_date) {
+        return getMapper().countToday(start_date, end_date);
+    }
 }

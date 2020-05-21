@@ -5,12 +5,14 @@ import com.hl.common.constants.Result;
 import com.hl.common.constants.ResultCode;
 import com.hl.common.util.JwtHelper;
 import com.hl.common.util.UUIDGenerator;
+import com.hl.insmanager.module.BackendAccount;
 import com.hl.insmanager.module.Dictionary;
 import com.hl.insmanager.module.User;
 import com.hl.insmanager.module.UserLabel;
 import com.hl.insmanager.properties.ImagePath;
 import com.hl.insmanager.properties.JwtConfig;
 import com.hl.insmanager.properties.OssConfig;
+import com.hl.insmanager.service.BackendAccountService;
 import com.hl.insmanager.service.DictionaryService;
 import com.hl.insmanager.service.UserLabelService;
 import com.hl.insmanager.service.UserService;
@@ -55,6 +57,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserLabelService<UserLabel> userLabelService;
+
+    @Autowired
+    private BackendAccountService<BackendAccount> backendAccountService;
 
     @Autowired
     private ImagePath imagePath;
@@ -359,6 +364,35 @@ public class UserController extends BaseController {
         userVO = userService.usersRecommend(getLoginerId(request));
         ResultsPageVO resultsPageVO = ResultsPageVO.init(userVO, pageVO);
         return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 后台管理 - 登录 1. 登录接口
+     * @return
+     */
+    @RequestMapping(value = "/backend/login", method = RequestMethod.POST)
+    public Result backendLogin(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap){
+        try {
+            if(StringUtils.isEmpty(paramMap.get("account_name"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 account_name");
+            }
+            if(StringUtils.isEmpty(paramMap.get("account_password"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 account_password");
+            }
+            BackendAccount tmp = new BackendAccount();
+            tmp.setAccount_name(paramMap.get("account_name"));
+            tmp.setAccount_password(paramMap.get("account_password"));
+            BackendAccount current = backendAccountService.selectByEqualT(tmp);
+            if(current != null && !StringUtils.isEmpty(current.getAccount_id())){
+                String jwt = JwtHelper.createJWT(current.getAccount_name(), current.getAccount_id(), "", "", jwtConfig.getExpDates(), jwtConfig.getEncodedKey());
+                return Result.getSuccResult(ResultCode.SUCCESS, "jwt", jwt);
+            }else{
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "账号密码不对");
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
     }
 
 }

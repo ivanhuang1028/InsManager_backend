@@ -70,4 +70,9 @@ public class MsgServiceImp<T> extends BaseServiceImp<T> implements MsgService<T>
     public List<MsgActionVO> msgsAction4(String loginerId) {
         return getMapper().msgsAction4(loginerId);
     }
+
+    @Override
+    public Integer countToday(String start_date, String end_date) {
+        return getMapper().countToday(start_date, end_date);
+    }
 }

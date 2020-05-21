@@ -24,4 +24,6 @@ public interface MsgService<T> extends BaseService<T>, MsgMapper<T> {
     List<MsgActionVO> msgsAction3(String loginerId);
 
     List<MsgActionVO> msgsAction4(String loginerId);
+
+    Integer countToday(String start_date, String end_date);
 }

@@ -29,4 +29,6 @@ public interface TopicService<T> extends BaseService<T>, TopicMapper<T> {
     void topicAtRead(String topic_id, String loginerId);
 
     List<TopicsCommentsVO> topicsComments(String topic_id);
+
+    Integer countToday(String start_date, String end_date);
 }

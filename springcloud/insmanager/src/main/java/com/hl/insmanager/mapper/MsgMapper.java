@@ -30,4 +30,6 @@ public interface MsgMapper<T> extends BaseMapper<T> {
 
     List<MsgActionVO> msgsAction4(@Param("loginerId") String loginerId);
 
+    Integer countToday(@Param("start_date") String start_date, @Param("end_date") String end_date);
+
 }

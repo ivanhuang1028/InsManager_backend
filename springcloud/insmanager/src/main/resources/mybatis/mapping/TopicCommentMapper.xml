@@ -294,6 +294,17 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         UPDATE t_topic_comment SET is_read = 1 WHERE topic_id = #{topic_id}
     </update>
 
+    <select id="countToday" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_topic_comment ttc
+        WHERE 1=1
+        <if test="start_date != null  and start_date != ''  ">
+            AND ttc.createtime &gt;= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND ttc.createtime &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

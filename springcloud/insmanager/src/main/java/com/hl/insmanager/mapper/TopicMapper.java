@@ -34,4 +34,6 @@ public interface TopicMapper<T> extends BaseMapper<T> {
     void topicAtRead(@Param("topic_id") String topic_id, @Param("loginerId") String loginerId);
 
     List<TopicsCommentsVO> topicsComments(@Param("topic_id") String topic_id);
+
+    Integer countToday(@Param("start_date") String start_date, @Param("end_date") String end_date);
 }

@@ -3,6 +3,7 @@ package com.hl.insmanager.service.imp;
 import com.hl.insmanager.mapper.BaseMapper;
 import com.hl.insmanager.mapper.UserMapper;
 import com.hl.insmanager.service.UserService;
+import com.hl.insmanager.vo.backend.UserBackendVO;
 import com.hl.insmanager.vo.user.UserDetailInfoVO;
 import com.hl.insmanager.vo.user.UserInfoVO;
 import com.hl.insmanager.vo.user.UserLabelVO;
@@ -76,5 +77,15 @@ public class UserServiceImp<T> extends BaseServiceImp<T> implements UserService<
     @Override
     public List<UserVO> usersRecommend(String loginerId) {
         return getMapper().usersRecommend(loginerId);
+    }
+
+    @Override
+    public Integer countToday(String start_date, String end_date) {
+        return getMapper().countToday(start_date, end_date);
+    }
+
+    @Override
+    public List<UserBackendVO> usersBackend(String start_date, String end_date, String user_gender, String user_region, String user_school, String key) {
+        return getMapper().usersBackend(start_date, end_date, user_gender, user_region, user_school, key);
     }
 }

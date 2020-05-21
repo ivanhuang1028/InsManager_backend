@@ -1,5 +1,6 @@
 package com.hl.insmanager.mapper;
 
+import com.hl.insmanager.vo.backend.UserBackendVO;
 import com.hl.insmanager.vo.user.UserDetailInfoVO;
 import com.hl.insmanager.vo.user.UserInfoVO;
 import com.hl.insmanager.vo.user.UserLabelVO;
@@ -32,5 +33,11 @@ public interface UserMapper<T> extends BaseMapper<T> {
     List<UserLabelVO> usersLabels(@Param("logierId") String loginerId);
 
     List<UserVO> usersRecommend(@Param("logierId") String loginerId);
+
+    Integer countToday(@Param("start_date") String start_date, @Param("end_date") String end_date);
+
+    List<UserBackendVO> usersBackend(@Param("start_date") String start_date, @Param("end_date") String end_date,
+                                     @Param("user_gender") String user_gender, @Param("user_region") String user_region,
+                                     @Param("user_school") String user_school, @Param("key") String key);
 
 }
