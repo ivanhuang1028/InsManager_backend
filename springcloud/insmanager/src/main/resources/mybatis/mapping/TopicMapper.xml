@@ -531,6 +531,46 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY tt.topic_createtime DESC
     </select>
 
+    <update id="topicsShield">
+        UPDATE t_topic tt SET tt.is_valid = 0
+        WHERE tt.topic_id IN
+        <foreach collection="topic_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="topicsUnShield">
+        UPDATE t_topic tt SET tt.is_valid = 1
+        WHERE tt.topic_id IN
+        <foreach collection="topic_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="topicsRecommend">
+        UPDATE t_topic tt SET tt.is_recommend = 1
+        WHERE tt.topic_id IN
+        <foreach collection="topic_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="topicsUnRecommend">
+        UPDATE t_topic tt SET tt.is_recommend = 0
+        WHERE tt.topic_id IN
+        <foreach collection="topic_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="topicsDelete">
+        delete from t_topic
+        WHERE topic_id IN
+        <foreach collection="topic_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </delete>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

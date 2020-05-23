@@ -19,6 +19,9 @@ public class SysMsg implements Serializable {
     //系统消息内容
     private String sys_msg_content;
 
+    //系统消息跳转链接
+    private String sys_msg_link;
+
     //发送时间
     private Date createtime;
 

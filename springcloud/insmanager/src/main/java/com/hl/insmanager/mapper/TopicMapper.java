@@ -40,4 +40,14 @@ public interface TopicMapper<T> extends BaseMapper<T> {
 
     List<TopicsBackendVO> topicsBackendVO(@Param("start_date") String start_date, @Param("end_date") String end_date,
                                           @Param("topic_valid") String topic_valid, @Param("user_name") String user_name);
+
+    void topicsShield(@Param("topic_ids") List<String> topic_ids);
+
+    void topicsUnShield(@Param("topic_ids") List<String> topic_ids);
+
+    void topicsRecommend(@Param("topic_ids") List<String> topic_ids);
+
+    void topicsUnRecommend(@Param("topic_ids") List<String> topic_ids);
+
+    void topicsDelete(@Param("topic_ids") List<String> topic_ids);
 }

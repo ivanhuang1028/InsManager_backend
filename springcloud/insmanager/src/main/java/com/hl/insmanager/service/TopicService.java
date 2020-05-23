@@ -34,4 +34,14 @@ public interface TopicService<T> extends BaseService<T>, TopicMapper<T> {
     Integer countToday(String start_date, String end_date);
 
     List<TopicsBackendVO> topicsBackendVO(String start_date, String end_date, String topic_valid, String user_name);
+
+    void topicsShield(List<String> topic_ids);
+
+    void topicsUnShield(List<String> topic_ids);
+
+    void topicsRecommend(List<String> topic_ids);
+
+    void topicsUnRecommend(List<String> topic_ids);
+
+    void topicsDelete(List<String> topic_ids);
 }

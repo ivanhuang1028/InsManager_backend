@@ -93,4 +93,29 @@ public class TopicServiceImp<T> extends BaseServiceImp<T> implements TopicServic
         return getMapper().topicsBackendVO(start_date, end_date, topic_valid, user_name);
     }
 
+    @Override
+    public void topicsShield(List<String> topic_ids) {
+        getMapper().topicsShield(topic_ids);
+    }
+
+    @Override
+    public void topicsUnShield(List<String> topic_ids) {
+        getMapper().topicsUnShield(topic_ids);
+    }
+
+    @Override
+    public void topicsRecommend(List<String> topic_ids) {
+        getMapper().topicsRecommend(topic_ids);
+    }
+
+    @Override
+    public void topicsUnRecommend(List<String> topic_ids) {
+        getMapper().topicsUnRecommend(topic_ids);
+    }
+
+    @Override
+    public void topicsDelete(List<String> topic_ids) {
+        getMapper().topicsDelete(topic_ids);
+    }
+
 }

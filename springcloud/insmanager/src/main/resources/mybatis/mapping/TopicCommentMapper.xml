@@ -305,6 +305,50 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         </if>
     </select>
 
+    <resultMap id="commentBackendVO" type="com.hl.insmanager.vo.backend.CommentBackendVO">
+        <result column="comment_id" property="comment_id"/>
+        <result column="comment" property="comment"/>
+        <result column="comment_status" property="comment_status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+    </resultMap>
+
+    <select id="commentBackendVO" resultMap="commentBackendVO">
+        SELECT ttc.comment_id, ttc.comment, ttc.is_shield AS 'comment_status',
+        ttc.createtime, tu.user_id, tu.user_name
+        FROM t_topic_comment ttc
+        INNER JOIN t_user tu
+        ON (ttc.user_id = tu.user_id
+        <if test="start_date != null  and start_date != ''  ">
+            AND ttc.createtime &gt;= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND ttc.createtime &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+        <if test="user_name != null  and user_name != ''  ">
+            AND tu.user_name LIKE CONCAT('%', #{user_name}, '%')
+        </if>
+        )
+        ORDER BY ttc.createtime DESC
+    </select>
+
+    <update id="commentsShield">
+        UPDATE t_topic_comment ttc SET ttc.is_shield = 1
+        WHERE ttc.comment_id IN
+        <foreach collection="comment_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="commentsUnShield">
+        UPDATE t_topic_comment ttc SET ttc.is_shield = 0
+        WHERE ttc.comment_id IN
+        <foreach collection="comment_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

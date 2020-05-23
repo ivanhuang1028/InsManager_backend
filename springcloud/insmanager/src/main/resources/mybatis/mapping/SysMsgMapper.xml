@@ -19,6 +19,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         <result column="sys_msg_id" property="sys_msg_id"/>
         <result column="sys_msg_topic" property="sys_msg_topic"/>
         <result column="sys_msg_content" property="sys_msg_content"/>
+        <result column="sys_msg_link" property="sys_msg_link"/>
         <result column="createtime" property="createtime"/>
     </resultMap>
 
@@ -31,6 +32,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             sys_msg_id,
             sys_msg_topic,
             sys_msg_content,
+            sys_msg_link,
             createtime
         </trim>
     </sql>
@@ -41,6 +43,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="sys_msg_id != null and sys_msg_id != ''">sys_msg_id,</if>
             <if test="sys_msg_topic != null and sys_msg_topic != ''">sys_msg_topic,</if>
             <if test="sys_msg_content != null and sys_msg_content != ''">sys_msg_content,</if>
+            <if test="sys_msg_link != null and sys_msg_link != ''">sys_msg_link,</if>
             createtime,
         </trim>
     </sql>
@@ -51,6 +54,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="sys_msg_id != null and sys_msg_id != ''">#{sys_msg_id,jdbcType=VARCHAR},</if>
             <if test="sys_msg_topic != null and sys_msg_topic != ''">#{sys_msg_topic,jdbcType=VARCHAR},</if>
             <if test="sys_msg_content != null and sys_msg_content != ''">#{sys_msg_content,jdbcType=VARCHAR},</if>
+            <if test="sys_msg_link != null and sys_msg_link != ''">#{sys_msg_link,jdbcType=VARCHAR},</if>
             now(),
         </trim>
     </sql>
@@ -64,6 +68,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
             <if test="sys_msg_content != null and sys_msg_content != ''">
                 sys_msg_content=#{sys_msg_content,jdbcType=VARCHAR},
             </if>
+            <if test="sys_msg_link != null and sys_msg_link != ''">
+                sys_msg_link=#{sys_msg_link,jdbcType=VARCHAR},
+            </if>
         </trim>
     </sql>
 
@@ -76,6 +83,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.sys_msg_content != null   and t.sys_msg_content != '' ">and sys_msg_content like
                     concat('%',#{t.sys_msg_content},'%')
+                </if>
+                <if test="t.sys_msg_link != null   and t.sys_msg_link != '' ">and sys_msg_link like
+                    concat('%',#{t.sys_msg_link},'%')
                 </if>
             </if>
         </trim>
@@ -93,6 +103,9 @@ Copyright (c) 2016 by ivan.huang all rights reserved
                 </if>
                 <if test="t.sys_msg_content != null  and t.sys_msg_content != '' ">and sys_msg_content =
                     #{t.sys_msg_content}
+                </if>
+                <if test="t.sys_msg_link != null  and t.sys_msg_link != '' ">and sys_msg_link =
+                    #{t.sys_msg_link}
                 </if>
             </if>
         </trim>
@@ -246,6 +259,14 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         from t_sys_msg
         ORDER BY createtime DESC LIMIT 1
     </select>
+
+    <delete id="sysmsgsDelete">
+        delete from t_sys_msg
+        where sys_msg_id IN
+        <foreach collection="sys_msg_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </delete>
 
 
     <!-- OtherModule Mapper 对应接口 end  -->

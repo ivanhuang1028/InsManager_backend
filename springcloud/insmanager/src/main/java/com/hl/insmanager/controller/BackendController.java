@@ -60,22 +60,7 @@ public class BackendController extends BaseController {
     private MsgService<Msg> msgService;
 
     @Autowired
-    private DictionaryService<Dictionary> dictionaryService;
-
-    @Autowired
-    private UserLabelService<UserLabel> userLabelService;
-
-    @Autowired
-    private BackendAccountService<BackendAccount> backendAccountService;
-
-    @Autowired
-    private ImagePath imagePath;
-
-    @Autowired
-    private OssConfig ossConfig;
-
-    @Autowired
-    private JwtConfig jwtConfig;
+    private SysMsgService<SysMsg> sysMsgService;
 
     /**
      * 后台管理 首页 1. 首页统计基础数据接口
@@ -218,6 +203,224 @@ public class BackendController extends BaseController {
 
         ResultsPageVO resultsPageVO = ResultsPageVO.init(topicsBackendVO, pageVO);
         return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 后台管理 作品 2. 帖子作品屏蔽操作接口
+     */
+    @RequestMapping(value = "/topics/shield", method = RequestMethod.POST)
+    public Result topicsShield(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("topic_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 topic_ids");
+            }
+
+            List<String> topic_ids = Arrays.asList(paramMap.get("topic_ids").split(","));
+            topicService.topicsShield(topic_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 作品 3. 帖子作品取消屏蔽操作接口
+     */
+    @RequestMapping(value = "/topics/unshield", method = RequestMethod.POST)
+    public Result topicsUnShield(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("topic_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 topic_ids");
+            }
+
+            List<String> topic_ids = Arrays.asList(paramMap.get("topic_ids").split(","));
+            topicService.topicsUnShield(topic_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 作品 4. 帖子作品推荐操作接口
+     */
+    @RequestMapping(value = "/topics/recommend", method = RequestMethod.POST)
+    public Result topicsRecommend(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("topic_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 topic_ids");
+            }
+
+            List<String> topic_ids = Arrays.asList(paramMap.get("topic_ids").split(","));
+            topicService.topicsRecommend(topic_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 作品 5. 帖子作品取消推荐操作接口
+     */
+    @RequestMapping(value = "/topics/unrecommend", method = RequestMethod.POST)
+    public Result topicsUnRecommend(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("topic_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 topic_ids");
+            }
+
+            List<String> topic_ids = Arrays.asList(paramMap.get("topic_ids").split(","));
+            topicService.topicsUnRecommend(topic_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 作品 6. 帖子作品删除操作接口
+     */
+    @RequestMapping(value = "/topics", method = RequestMethod.DELETE)
+    public Result topicsDelete(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("topic_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 topic_ids");
+            }
+
+            List<String> topic_ids = Arrays.asList(paramMap.get("topic_ids").split(","));
+            topicService.topicsDelete(topic_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+
+    /**
+     * 后台管理 评论 1. 评论搜索列表接口
+     * @return
+     */
+    @RequestMapping(value = "/comments/backend", method = RequestMethod.GET)
+    public Result commentsBackend(HttpServletRequest request, PageVO pageVO){
+        List<CommentBackendVO> commentBackendVO = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        commentBackendVO = topicCommentService.commentBackendVO(RequestUtil.get(request, "start_date"),
+                RequestUtil.get(request, "end_date"), RequestUtil.get(request, "user_name"));
+
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(commentBackendVO, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 后台管理 评论 2. 评论屏蔽操作接口
+     */
+    @RequestMapping(value = "/comments/shield", method = RequestMethod.POST)
+    public Result commentsShield(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("comment_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 comment_ids");
+            }
+
+            List<String> comment_ids = Arrays.asList(paramMap.get("comment_ids").split(","));
+            topicCommentService.commentsShield(comment_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 评论 3. 评论取消屏蔽操作接口
+     */
+    @RequestMapping(value = "/comments/unshield", method = RequestMethod.POST)
+    public Result commentsUnShield(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("comment_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 comment_ids");
+            }
+
+            List<String> comment_ids = Arrays.asList(paramMap.get("comment_ids").split(","));
+            topicCommentService.commentsUnShield(comment_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 系统 1. 系统消息列表接口
+     * @return
+     */
+    @RequestMapping(value = "/sysmsgs/backend", method = RequestMethod.GET)
+    public Result sysmsgsBackend(HttpServletRequest request, PageVO pageVO){
+        List<SysMsg> sysMsgs = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        sysMsgs = sysMsgService.selectByBlurryT(null);
+
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(sysMsgs, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
+
+    /**
+     * 后台管理 系统 2. 系统消息新增接口
+     */
+    @RequestMapping(value = "/sysmsgs/backend", method = RequestMethod.POST)
+    public Result sysmsgsBackendPost(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("sys_msg_topic"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 sys_msg_topic");
+            }
+            if(StringUtils.isEmpty(paramMap.get("sys_msg_content"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 sys_msg_content");
+            }
+
+            SysMsg sysMsg = new SysMsg();
+            sysMsg.setSys_msg_id(UUIDGenerator.generate());
+            sysMsg.setSys_msg_topic(paramMap.get("sys_msg_topic"));
+            sysMsg.setSys_msg_content(paramMap.get("sys_msg_content"));
+            if(!StringUtils.isEmpty(paramMap.get("sys_msg_link"))){
+                sysMsg.setSys_msg_link(paramMap.get("sys_msg_link"));
+            }
+            sysMsgService.insert(sysMsg);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 系统 3. 系统消息删除操作接口
+     */
+    @RequestMapping(value = "/sysmsgs/backend", method = RequestMethod.DELETE)
+    public Result sysmsgsBackendDelete(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("sys_msg_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 sys_msg_ids");
+            }
+
+            List<String> sys_msg_ids = Arrays.asList(paramMap.get("sys_msg_ids").split(","));
+            sysMsgService.sysmsgsDelete(sys_msg_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
     }
 
 }

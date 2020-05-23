@@ -44,4 +44,9 @@ public class SysMsgServiceImp<T> extends BaseServiceImp<T> implements SysMsgServ
     public SysMsg getFirst() {
         return getMapper().getFirst();
     }
+
+    @Override
+    public void sysmsgsDelete(List<String> sys_msg_ids) {
+        getMapper().sysmsgsDelete(sys_msg_ids);
+    }
 }
