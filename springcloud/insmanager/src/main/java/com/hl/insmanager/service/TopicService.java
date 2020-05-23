@@ -1,6 +1,7 @@
 package com.hl.insmanager.service;
 
 import com.hl.insmanager.mapper.TopicMapper;
+import com.hl.insmanager.vo.backend.TopicsBackendVO;
 import com.hl.insmanager.vo.topic.TopicsCommentsVO;
 import com.hl.insmanager.vo.topic.TopicsImagesVO;
 import com.hl.insmanager.vo.topic.TopicsVO;
@@ -31,4 +32,6 @@ public interface TopicService<T> extends BaseService<T>, TopicMapper<T> {
     List<TopicsCommentsVO> topicsComments(String topic_id);
 
     Integer countToday(String start_date, String end_date);
+
+    List<TopicsBackendVO> topicsBackendVO(String start_date, String end_date, String topic_valid, String user_name);
 }

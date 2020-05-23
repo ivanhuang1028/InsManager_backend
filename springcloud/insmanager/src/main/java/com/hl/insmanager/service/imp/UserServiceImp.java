@@ -3,6 +3,7 @@ package com.hl.insmanager.service.imp;
 import com.hl.insmanager.mapper.BaseMapper;
 import com.hl.insmanager.mapper.UserMapper;
 import com.hl.insmanager.service.UserService;
+import com.hl.insmanager.vo.backend.UserBackend1VO;
 import com.hl.insmanager.vo.backend.UserBackendVO;
 import com.hl.insmanager.vo.user.UserDetailInfoVO;
 import com.hl.insmanager.vo.user.UserInfoVO;
@@ -87,5 +88,20 @@ public class UserServiceImp<T> extends BaseServiceImp<T> implements UserService<
     @Override
     public List<UserBackendVO> usersBackend(String start_date, String end_date, String user_gender, String user_region, String user_school, String key) {
         return getMapper().usersBackend(start_date, end_date, user_gender, user_region, user_school, key);
+    }
+
+    @Override
+    public UserBackend1VO usersBackend1(String user_id) {
+        return getMapper().usersBackend1(user_id);
+    }
+
+    @Override
+    public void userBlack(List<String> user_ids) {
+        getMapper().userBlack(user_ids);
+    }
+
+    @Override
+    public void userUnBlack(List<String> user_ids) {
+        getMapper().userUnBlack(user_ids);
     }
 }

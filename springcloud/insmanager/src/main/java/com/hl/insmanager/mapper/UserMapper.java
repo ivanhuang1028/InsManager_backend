@@ -1,5 +1,6 @@
 package com.hl.insmanager.mapper;
 
+import com.hl.insmanager.vo.backend.UserBackend1VO;
 import com.hl.insmanager.vo.backend.UserBackendVO;
 import com.hl.insmanager.vo.user.UserDetailInfoVO;
 import com.hl.insmanager.vo.user.UserInfoVO;
@@ -40,4 +41,9 @@ public interface UserMapper<T> extends BaseMapper<T> {
                                      @Param("user_gender") String user_gender, @Param("user_region") String user_region,
                                      @Param("user_school") String user_school, @Param("key") String key);
 
+    UserBackend1VO usersBackend1(@Param("user_id") String user_id);
+
+    void userBlack(@Param("user_ids") List<String> user_ids);
+
+    void userUnBlack(@Param("user_ids") List<String> user_ids);
 }

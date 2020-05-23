@@ -565,6 +565,54 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         ORDER BY tu.createtime
     </select>
 
+    <resultMap id="userBackend1VO" type="com.hl.insmanager.vo.backend.UserBackend1VO">
+        <result column="user_id" property="user_id"/>
+        <result column="user_icon" property="user_icon"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_weixin_account" property="user_weixin_account"/>
+        <result column="createtime" property="createtime"/>
+        <result column="user_phone" property="user_phone"/>
+        <result column="user_black" property="user_black"/>
+        <result column="user_region" property="user_region"/>
+        <result column="user_school" property="user_school"/>
+        <result column="update_latest_time" property="update_latest_time"/>
+        <result column="topic_num" property="topic_num"/>
+        <result column="focused_num" property="focused_num"/>
+        <result column="focus_num" property="focus_num"/>
+        <result column="comment_num" property="comment_num"/>
+        <result column="like_num" property="like_num"/>
+        <result column="transpond_num" property="transpond_num"/>
+    </resultMap>
+
+    <select id="usersBackend1" resultMap="userBackend1VO">
+        SELECT tu.user_id, tu.user_icon, tu.user_name, tu.user_weixin_account, tu.createtime,
+        tu.user_phone, tu.user_black, tu.user_school, tu.update_latest_time,
+        (SELECT COUNT(1) FROM t_topic tt WHERE tt.topic_user = tu.user_id AND tt.is_valid = 1 ) AS 'topic_num',
+        (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_to = tu.user_id ) AS 'focused_num',
+        (SELECT COUNT(1) FROM t_user_focus tuf WHERE tuf.focus_from = tu.user_id ) AS 'focus_num',
+        (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.user_id = tu.user_id ) AS 'comment_num',
+        (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.user_id = tu.user_id ) AS 'like_num',
+        (SELECT COUNT(1) FROM t_msg tm WHERE tm.user_from = tu.user_id ) AS 'transpond_num'
+        FROM t_user tu
+        WHERE tu.user_id = #{user_id}
+    </select>
+
+    <update id="userBlack">
+        UPDATE t_user tu SET tu.user_black = 1
+        WHERE tu.user_id IN
+        <foreach collection="user_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="userUnBlack">
+        UPDATE t_user tu SET tu.user_black = 0
+        WHERE tu.user_id IN
+        <foreach collection="user_ids" item="id" separator="," close=")" open="(" index="index">
+            #{id}
+        </foreach>
+    </update>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

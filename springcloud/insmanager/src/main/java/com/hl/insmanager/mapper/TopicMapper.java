@@ -1,5 +1,6 @@
 package com.hl.insmanager.mapper;
 
+import com.hl.insmanager.vo.backend.TopicsBackendVO;
 import com.hl.insmanager.vo.topic.TopicsCommentsVO;
 import com.hl.insmanager.vo.topic.TopicsImagesVO;
 import com.hl.insmanager.vo.topic.TopicsVO;
@@ -36,4 +37,7 @@ public interface TopicMapper<T> extends BaseMapper<T> {
     List<TopicsCommentsVO> topicsComments(@Param("topic_id") String topic_id);
 
     Integer countToday(@Param("start_date") String start_date, @Param("end_date") String end_date);
+
+    List<TopicsBackendVO> topicsBackendVO(@Param("start_date") String start_date, @Param("end_date") String end_date,
+                                          @Param("topic_valid") String topic_valid, @Param("user_name") String user_name);
 }

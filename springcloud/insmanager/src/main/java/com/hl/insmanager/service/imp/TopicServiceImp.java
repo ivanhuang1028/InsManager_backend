@@ -3,6 +3,7 @@ package com.hl.insmanager.service.imp;
 import com.hl.insmanager.mapper.BaseMapper;
 import com.hl.insmanager.mapper.TopicMapper;
 import com.hl.insmanager.service.TopicService;
+import com.hl.insmanager.vo.backend.TopicsBackendVO;
 import com.hl.insmanager.vo.topic.TopicsCommentsVO;
 import com.hl.insmanager.vo.topic.TopicsImagesVO;
 import com.hl.insmanager.vo.topic.TopicsVO;
@@ -85,6 +86,11 @@ public class TopicServiceImp<T> extends BaseServiceImp<T> implements TopicServic
     @Override
     public Integer countToday(String start_date, String end_date) {
         return getMapper().countToday(start_date, end_date);
+    }
+
+    @Override
+    public List<TopicsBackendVO> topicsBackendVO(String start_date, String end_date, String topic_valid, String user_name) {
+        return getMapper().topicsBackendVO(start_date, end_date, topic_valid, user_name);
     }
 
 }

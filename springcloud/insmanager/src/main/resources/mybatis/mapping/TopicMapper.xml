@@ -491,6 +491,46 @@ Copyright (c) 2016 by ivan.huang all rights reserved
         </if>
     </select>
 
+    <resultMap id="topicsBackendVO" type="com.hl.insmanager.vo.backend.TopicsBackendVO">
+        <result column="topic_id" property="topic_id"/>
+        <result column="topic_type" property="topic_type"/>
+        <result column="topic_desc" property="topic_desc"/>
+        <result column="like_num" property="like_num"/>
+        <result column="comment_num" property="comment_num"/>
+        <result column="transpond_num" property="transpond_num"/>
+        <result column="topic_status" property="topic_status"/>
+        <result column="user_id" property="user_id"/>
+        <result column="user_name" property="user_name"/>
+    </resultMap>
+
+    <select id="topicsBackendVO" resultMap="topicsBackendVO">
+        SELECT tt.topic_id, tt.topic_type, tt.topic_desc,
+        (SELECT COUNT(1) FROM t_topic_like ttl WHERE ttl.topic_id = tt.topic_id) AS 'like_num',
+        (SELECT COUNT(1) FROM t_topic_comment ttc WHERE ttc.topic_id = tt.topic_id) AS 'comment_num',
+        (SELECT COUNT(1) FROM t_msg tm WHERE tm.topic_id = tt.topic_id AND tm.msg_type = 5) AS 'transpond_num',
+        CASE WHEN (tt.is_valid = 1 AND is_recommend = 1) THEN 2
+        WHEN (tt.is_valid = 1 AND is_recommend = 0) THEN 1
+        WHEN tt.is_valid = 0 THEN 0
+        ELSE '' END AS 'topic_status', tu.user_id, tu.user_name
+        FROM t_topic tt
+        INNER JOIN t_user tu
+        ON (tt.topic_user = tu.user_id
+        <if test="topic_valid != null  and topic_valid != ''  ">
+            AND tt.topic_valid = #{topic_valid}
+        </if>
+        <if test="start_date != null  and start_date != ''  ">
+            AND tt.topic_createtime &gt;= CONCAT(#{start_date}, ' 00:00:01')
+        </if>
+        <if test="end_date != null  and end_date != ''  ">
+            AND tt.topic_createtime &lt;= CONCAT(#{end_date}, ' 23:59:59')
+        </if>
+        <if test="user_name != null  and user_name != ''  ">
+            AND tu.user_name LIKE CONCAT('%', #{user_name}, '%')
+        </if>
+        )
+        ORDER BY tt.topic_createtime DESC
+    </select>
+
     <!-- OtherModule Mapper 对应接口 end  -->
 
 </mapper>

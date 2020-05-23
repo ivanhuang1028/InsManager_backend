@@ -1,6 +1,7 @@
 package com.hl.insmanager.service;
 
 import com.hl.insmanager.mapper.UserMapper;
+import com.hl.insmanager.vo.backend.UserBackend1VO;
 import com.hl.insmanager.vo.backend.UserBackendVO;
 import com.hl.insmanager.vo.user.UserDetailInfoVO;
 import com.hl.insmanager.vo.user.UserInfoVO;
@@ -32,4 +33,10 @@ public interface UserService<T> extends BaseService<T>, UserMapper<T> {
     Integer countToday(String start_date, String end_date);
 
     List<UserBackendVO> usersBackend(String start_date, String end_date, String user_gender, String user_region, String user_school, String key);
+
+    UserBackend1VO usersBackend1(String user_id);
+
+    void userBlack(List<String> user_ids);
+
+    void userUnBlack(List<String> user_ids);
 }

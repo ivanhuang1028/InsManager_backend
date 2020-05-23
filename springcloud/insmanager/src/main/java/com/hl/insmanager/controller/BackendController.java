@@ -14,9 +14,7 @@ import com.hl.insmanager.service.*;
 import com.hl.insmanager.util.Constants;
 import com.hl.insmanager.util.ImageBase64Converter;
 import com.hl.insmanager.util.OssUtils;
-import com.hl.insmanager.vo.backend.CountBaseVO;
-import com.hl.insmanager.vo.backend.CountTodayVO;
-import com.hl.insmanager.vo.backend.UserBackendVO;
+import com.hl.insmanager.vo.backend.*;
 import com.hl.insmanager.vo.dic.DicVO;
 import com.hl.insmanager.vo.msg.MsgVO;
 import com.hl.insmanager.vo.page.PageVO;
@@ -144,6 +142,83 @@ public class BackendController extends BaseController {
         return Result.getSuccResult(resultsPageVO);
     }
 
+    /**
+     * 后台管理 会员 2. 会员用户基本资料接口
+     * @return
+     */
+    @RequestMapping(value = "/users/backend/{user_id}", method = RequestMethod.GET)
+    public Result usersBackend1(HttpServletRequest request, @PathVariable String user_id){
+        UserBackend1VO vo = new UserBackend1VO();
+        try {
+            vo = userService.usersBackend1(user_id);
+        }catch (Exception e){
+            return Result.getFailResult(e.getMessage());
+        }
+
+        return Result.getSuccResult(vo);
+    }
+
+    /**
+     * 后台管理 会员 3. 用户加入黑名单操作接口
+     */
+    @RequestMapping(value = "/users/black", method = RequestMethod.POST)
+    public Result userBlack(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("user_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 user_ids");
+            }
+
+            List<String> user_ids = Arrays.asList(paramMap.get("user_ids").split(","));
+            userService.userBlack(user_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 会员 4. 用户取消黑名单操作接口
+     */
+    @RequestMapping(value = "/users/unblack", method = RequestMethod.POST)
+    public Result userUnBlack(HttpServletRequest request, @RequestBody HashMap<String, String> paramMap) {
+        try {
+            if(StringUtils.isEmpty(paramMap.get("user_ids"))){
+                return Result.getFalseResult(ResultCode.PARAMETER_ERROR, "缺参数 user_ids");
+            }
+
+            List<String> user_ids = Arrays.asList(paramMap.get("user_ids").split(","));
+            userService.userUnBlack(user_ids);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Result.getFalseResult(ResultCode.FAILURE, e.getMessage());
+        }
+        return Result.getSuccResult();
+    }
+
+    /**
+     * 后台管理 作品 1. 会员作品搜索列表接口
+     * @return
+     */
+    @RequestMapping(value = "/topics/backend", method = RequestMethod.GET)
+    public Result topicsBackend(HttpServletRequest request, PageVO pageVO){
+        List<TopicsBackendVO> topicsBackendVO = new ArrayList<>();
+        // 分页
+        if(pageVO.getOpenPage()){
+            PageHelper.startPage(pageVO.getPageIndex(), pageVO.getPageSize());
+        }
+
+        topicsBackendVO = topicService.topicsBackendVO(RequestUtil.get(request, "start_date"),
+                RequestUtil.get(request, "end_date"), RequestUtil.get(request, "topic_valid"),
+                RequestUtil.get(request, "user_name"));
+
+        for(TopicsBackendVO vo : topicsBackendVO){
+            vo.setImages(topicService.topicsImagesVO(vo.getTopic_id()));
+        }
+
+        ResultsPageVO resultsPageVO = ResultsPageVO.init(topicsBackendVO, pageVO);
+        return Result.getSuccResult(resultsPageVO);
+    }
 
 }
 
