@@ -533,6 +533,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
 
     <resultMap id="userBackendVO" type="com.hl.insmanager.vo.backend.UserBackendVO">
         <result column="user_id" property="user_id"/>
+        <result column="user_black" property="user_black"/>
         <result column="user_name" property="user_name"/>
         <result column="createtime" property="createtime"/>
         <result column="topic_num" property="topic_num"/>
@@ -540,7 +541,7 @@ Copyright (c) 2016 by ivan.huang all rights reserved
     </resultMap>
 
     <select id="usersBackend" resultMap="userBackendVO">
-        SELECT tu.user_id, tu.user_name, tu.createtime,
+        SELECT tu.user_id, tu.user_black, tu.user_name, tu.createtime,
         (SELECT COUNT(1) FROM t_topic tt WHERE tt.topic_user = tu.user_id ) AS 'topic_num',
         tu.update_latest_time AS 'latest_ope_time' FROM t_user tu
         WHERE 1=1

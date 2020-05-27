@@ -6,6 +6,7 @@ import lombok.Data;
 public class UserBackendVO {
 
     private String user_id;
+    private String user_black;
     private String user_name;
     private String createtime;
     private Integer topic_num;
